@@ -13,7 +13,7 @@ window.onload = init;
 function init() {
   canvas = document.getElementById("canvas");
   context = canvas.getContext("2d");
-
+  document.addEventListener("keydown", handle);
   window.requestAnimationFrame(gameLoop);
 }
 
@@ -31,23 +31,21 @@ function gameLoop(timeStamp) {
   window.requestAnimationFrame(gameLoop);
 }
 
-function update(secondsPassed) {
-  document.addEventListener("keydown", function (event) {
-    switch (event.key) {
-      case "ArrowUp":
-        y -= speed * secondsPassed;
-        break;
-      case "ArrowDown":
-        y += speed * secondsPassed;
-        break;
-      case "ArrowLeft":
-        x -= speed * secondsPassed;
-        break;
-      case "ArrowRight":
-        x += speed * secondsPassed;
-        break;
-    }
-  });
+function handle(event) {
+  switch (event.key) {
+    case "ArrowUp":
+      y -= speed * secondsPassed;
+      break;
+    case "ArrowDown":
+      y += speed * secondsPassed;
+      break;
+    case "ArrowLeft":
+      x -= speed * secondsPassed;
+      break;
+    case "ArrowRight":
+      x += speed * secondsPassed;
+      break;
+  }
 }
 
 function draw() {
