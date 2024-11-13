@@ -9,7 +9,7 @@ let oldTimeStamp = 0;
 window.onload = init;
 
 let radius = 30;
-let pos1 = new vector(300, 300);
+let pos1 = new vector(300, 200);
 let speed1 = new vector(375, 300);
 let velocity1;
 
