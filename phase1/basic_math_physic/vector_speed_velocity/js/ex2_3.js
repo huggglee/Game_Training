@@ -21,15 +21,16 @@ let pos3 = new vector(200, 100);
 let speed3 = new vector(150, 70);
 let velocity3;
 
-// let pos4 = new vector(300, 200);
-// let speed4 = new vector(50, 50);
-// let velocity4 = new vector(0,0);
+let pos4 = new vector(300, 200);
+let speed4 = new vector(100, 100);
+let velocity4 = new vector(0, 0);
 
 function init() {
   canvas = document.getElementById("canvas");
   context = canvas.getContext("2d");
 
-//   document.addEventListener("keydown", controlDirectionBall);
+  document.addEventListener("keydown", controlDirectionBall);
+  document.addEventListener("keyup", stopBall);
   window.requestAnimationFrame(gameLoop);
 }
 
@@ -47,7 +48,7 @@ function draw() {
   drawCircle(pos1, "red");
   drawCircle(pos2, "green");
   drawCircle(pos3, "yellow");
-//   drawCircle(pos4, "blue");
+  drawCircle(pos4, "blue");
 }
 
 function drawCircle(pos, style) {
@@ -68,7 +69,7 @@ function update(secondPassed) {
   velocity3 = vector.multiplyVector(speed3, secondPassed);
   pos3 = vector.addVectors(pos3, velocity3);
 
-//   pos4 = vector.addVectors(pos4, velocity4);
+  pos4 = vector.addVectors(pos4, velocity4);
 
   checkBounce(pos1, speed1);
   checkBounce(pos2, speed2);
@@ -84,5 +85,23 @@ function checkBounce(pos, speed) {
   }
 }
 
+function controlDirectionBall(event) {
+  switch (event.key) {
+    case "ArrowUp":
+      velocity4 = vector.multiplyVector(new vector(0, -1), speed4.y*secondPassed);
+      break;
+    case "ArrowDown":
+      velocity4 = vector.multiplyVector(new vector(0, 1), speed4.y*secondPassed);
+      break;
+    case "ArrowLeft":
+      velocity4 = vector.multiplyVector(new vector(-1, 0), speed4.x*secondPassed);
+      break;
+    case "ArrowRight":
+      velocity4 = vector.multiplyVector(new vector(1, 0), speed4.x*secondPassed);
+      break;
+  }
+}
 
-
+function stopBall(event){
+  velocity4 =new vector(0,0);
+}
