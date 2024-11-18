@@ -5,27 +5,27 @@ const gravity = 0.5;
 
 let balls = [
   {
-    position: { x: 200, y: 30 }, // Starting near the top
-    velocity: { x: 2, y: 0 }, // Initial velocity
-    radius: 20, // Size of the ball
+    position: { x: 200, y: 30 }, 
+    velocity: { x: 2, y: 0 }, 
+    radius: 20, 
     color: "blue",
   },
   {
-    position: { x: 250, y: 50 }, // Starting near the top
-    velocity: { x: 2, y: 0 }, // Initial velocity
-    radius: 20, // Size of the ball
+    position: { x: 250, y: 50 }, 
+    velocity: { x: 2, y: 0 }, 
+    radius: 20,  
     color: "red",
   },
   {
-    position: { x: 100, y: 80 }, // Starting near the top
-    velocity: { x: 2, y: 0 }, // Initial velocity
-    radius: 10, // Size of the ball
+    position: { x: 100, y: 80 }, 
+    velocity: { x: 2, y: 0 }, 
+    radius: 10, 
     color: "gray",
   },
   {
-    position: { x: 300, y: 100 }, // Starting near the top
-    velocity: { x: 2, y: 0 }, // Initial velocity
-    radius: 20, // Size of the ball
+    position: { x: 300, y: 100 }, 
+    velocity: { x: 2, y: 0 }, 
+    radius: 20, 
     color: "green",
   },
 ];
