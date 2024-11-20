@@ -1,121 +1,54 @@
-class GameObject {
-  constructor(context, x, y, vx, vy) {
-    this.context = context;
-    this.x = x;
-    this.y = y;
-    this.vx = vx;
-    this.vy = vy;
+import {Circle} from "../handle/Circle.js";
 
-    this.isColliding = false;
-  }
-}
-class Square extends GameObject {
-  constructor(context, x, y, vx, vy) {
-    super(context, x, y, vx, vy);
+// function detectCollisions() {
+//   let obj1;
+//   let obj2;
 
-    // Set default width and height
-    this.width = 50;
-    this.height = 50;
-  }
+//   // Reset collision state of all objects
+//   for (let i = 0; i < gameObjects.length; i++) {
+//     gameObjects[i].isColliding = false;
+//   }
 
-  draw() {
-    // Draw a simple square
-    this.context.fillStyle = this.isColliding ? "#ff8080" : "#0099b0";
-    this.context.fillRect(this.x, this.y, this.width, this.height);
-  }
+//   // Start checking for collisions
+//   for (let i = 0; i < gameObjects.length; i++) {
+//     obj1 = gameObjects[i];
+//     for (let j = i + 1; j < gameObjects.length; j++) {
+//       obj2 = gameObjects[j];
 
-  update(secondsPassed) {
-    // Apply acceleration
-    this.vy += g * secondsPassed;
+//       // Compare object1 with object2
+//       if (
+//         rectIntersect(
+//           obj1.x,
+//           obj1.y,
+//           obj1.width,
+//           obj1.height,
+//           obj2.x,
+//           obj2.y,
+//           obj2.width,
+//           obj2.height
+//         )
+//       ) {
+//         obj1.isColliding = true;
+//         obj2.isColliding = true;
+//       }
+//     }
+//   }
+// }
 
-    // Move with set velocity
-    this.x += this.vx * secondsPassed;
-    this.y += this.vy * secondsPassed;
-  }
-}
+// function rectIntersect(x1, y1, w1, h1, x2, y2, w2, h2) {
+//   // Check x and y for overlap
+//   if (x2 > w1 + x1 || x1 > w2 + x2 || y2 > h1 + y1 || y1 > h2 + y2) {
+//     return false;
+//   }
+//   return true;
+// }
 
-class Circle extends GameObject {
-  constructor(context, x, y, vx, vy, radius, mass, restitution) {
-    super(context, x, y, vx, vy);
+const canvas = document.getElementById("canvas");
+const context = canvas.getContext("2d");
+let gameObjects;
+let oldTimeStamp = 0;
+let secondsPassed;
 
-    // Set default radius
-    this.radius = radius || 25;
-    this.mass = mass;
-    this.restitution = restitution || 0.9;
-  }
-
-  draw() {
-    // Draw a simple circle
-    this.context.beginPath();
-    this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-    this.context.fillStyle = this.isColliding ? "#ff8080" : "#0099b0";
-    this.context.fill();
-
-    this.context.beginPath();
-    this.context.moveTo(this.x, this.y);
-    this.context.lineTo(this.x + this.vx, this.y + this.vy);
-    this.context.stroke();
-  }
-
-  update(secondsPassed) {
-    // Move with set velocity
-    this.vy += g * secondsPassed;
-
-    this.x += this.vx * secondsPassed;
-    this.y += this.vy * secondsPassed;
-
-    // Calculate the angle (vy before vx)
-    let radians = Math.atan2(this.vy, this.vx);
-
-    // Convert to degrees
-    let degrees = (180 * radians) / Math.PI;
-
-    // console.log(degrees);
-  }
-}
-
-function detectCollisions() {
-  let obj1;
-  let obj2;
-
-  // Reset collision state of all objects
-  for (let i = 0; i < gameObjects.length; i++) {
-    gameObjects[i].isColliding = false;
-  }
-
-  // Start checking for collisions
-  for (let i = 0; i < gameObjects.length; i++) {
-    obj1 = gameObjects[i];
-    for (let j = i + 1; j < gameObjects.length; j++) {
-      obj2 = gameObjects[j];
-
-      // Compare object1 with object2
-      if (
-        rectIntersect(
-          obj1.x,
-          obj1.y,
-          obj1.width,
-          obj1.height,
-          obj2.x,
-          obj2.y,
-          obj2.width,
-          obj2.height
-        )
-      ) {
-        obj1.isColliding = true;
-        obj2.isColliding = true;
-      }
-    }
-  }
-}
-
-function rectIntersect(x1, y1, w1, h1, x2, y2, w2, h2) {
-  // Check x and y for overlap
-  if (x2 > w1 + x1 || x1 > w2 + x2 || y2 > h1 + y1 || y1 > h2 + y2) {
-    return false;
-  }
-  return true;
-}
 function detectCircleCollision() {
   let obj1;
   let obj2;
@@ -207,23 +140,7 @@ function detectEdgeCollisions() {
     }
   }
 }
-const canvas = document.getElementById("canvas");
-const context = canvas.getContext("2d");
-let gameObjects;
-let oldTimeStamp = 0;
-let secondsPassed;
-const g = 9.81;
 
-function createWorld() {
-  gameObjects = [
-    new Square(context, 250, 50, 0, 50),
-    new Square(context, 250, 300, 0, -50),
-    new Square(context, 150, 0, 50, 50),
-    new Square(context, 250, 150, 50, 50),
-    new Square(context, 350, 75, -50, 50),
-    new Square(context, 300, 300, 50, -50),
-  ];
-}
 
 function createCircle() {
   gameObjects = [
