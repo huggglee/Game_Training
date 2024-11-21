@@ -1,12 +1,14 @@
 import { GameObject } from "./GameObject.js";
 
 export class Rectangle extends GameObject {
-  constructor(context, x, y, vx, vy) {
+  constructor(context, x, y, vx, vy,mass,restitution) {
     super(context, x, y, vx, vy);
 
     // Set default width and height
-    this.width = 50;
-    this.height = 50;
+    this.mass = mass;
+    this.restitution=restitution;
+    this.width = 100;
+    this.height = 60;
   }
 
   draw() {
@@ -17,8 +19,6 @@ export class Rectangle extends GameObject {
 
   update(secondsPassed) {
     // Apply acceleration
-    let g = 9.8;
-    this.vy += g * secondsPassed;
 
     // Move with set velocity
     this.x += this.vx * secondsPassed;
