@@ -85,6 +85,10 @@ function handleCollision(obj1, obj2) {
       obj1.vy -= impulseY * obj2.mass * restitution;
       obj2.vy += impulseY * obj1.mass * restitution;
 
+      document.getElementById('vx1').textContent = obj1.vx.toFixed(2);
+      document.getElementById('vy1').textContent = obj1.vy.toFixed(2);
+      document.getElementById('vx2').textContent = obj2.vx.toFixed(2);
+      document.getElementById('vy2').textContent = obj2.vy.toFixed(2);
     }
   }
   
