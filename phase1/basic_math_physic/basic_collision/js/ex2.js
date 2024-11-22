@@ -18,8 +18,8 @@ function init() {
 
 function createWorld() {
   gameObjects = [
-    new Rectangle(context, 100, 100, 100, 100, 100, 0.9),
-    new Rectangle(context, 300, 300, -50, -50, 50, 0.9),
+    new Rectangle(context, 100, 100, 150, 70, 100, 0.9),
+    new Rectangle(context, 400, 300, -100, -50, 50, 0.9),
   ];
 }
 
@@ -38,58 +38,41 @@ function detect_collision() {
 
       if (rectIntersect(obj1, obj2)) {
         obj1.isColliding = true;
-        obj1.isColliding = true;
+        obj2.isColliding = true;
         handleCollision(obj1, obj2);
       }
     }
   }
 }
 
-
 function handleCollision(obj1, obj2) {
-    // Tính độ chồng lấn giữa các hình chữ nhật
-    let overlapX =
-      Math.min(obj1.x + obj1.width - obj2.x, obj2.x + obj2.width - obj1.x);
-    let overlapY =
-      Math.min(obj1.y + obj1.height - obj2.y, obj2.y + obj2.height - obj1.y);
-  
-    // Chọn trục ít chồng lấn nhất
-    if (overlapX < overlapY) {
-      // Trục X
-      if (obj1.x < obj2.x) {
-        obj1.x -= overlapX / 2;
-        obj2.x += overlapX / 2;
-      } else {
-        obj1.x += overlapX / 2;
-        obj2.x -= overlapX / 2;
-      }
-      // Xử lý vận tốc theo trục X
-      let relativeVelocityX = obj1.vx - obj2.vx;
-      let restitution = Math.min(obj1.restitution, obj2.restitution);
-      let impulseX = (2 * relativeVelocityX) / (obj1.mass + obj2.mass);
-      obj1.vx -= impulseX * obj2.mass * restitution;
-      obj2.vx += impulseX * obj1.mass * restitution;
-    } else {
-      // Trục Y
-      if (obj1.y < obj2.y) {
-        obj1.y -= overlapY / 2;
-        obj2.y += overlapY / 2;
-      } else {
-        obj1.y += overlapY / 2;
-        obj2.y -= overlapY / 2;
-      }
-      // Xử lý vận tốc theo trục Y
-      let relativeVelocityY = obj1.vy - obj2.vy;
-      let restitution = Math.min(obj1.restitution, obj2.restitution);
-      let impulseY = (2 * relativeVelocityY) / (obj1.mass + obj2.mass);
-      obj1.vy -= impulseY * obj2.mass * restitution;
-      obj2.vy += impulseY * obj1.mass * restitution;
-
-    }
-  }
-  
-  
-  
+  let vCollision = { x: obj2.x - obj1.x, y: obj2.y - obj1.y };
+  let distance = Math.sqrt(
+    (obj2.x - obj1.x) * (obj2.x - obj1.x) +
+      (obj2.y - obj1.y) * (obj2.y - obj1.y)
+  );
+  let vCollisionNorm = {
+    x: vCollision.x / distance,
+    y: vCollision.y / distance,
+  };
+  let vRelativeVelocity = { x: obj1.vx - obj2.vx, y: obj1.vy - obj2.vy };
+  let speed =
+    vRelativeVelocity.x * vCollisionNorm.x +
+    vRelativeVelocity.y * vCollisionNorm.y;
+  speed *= Math.min(obj1.restitution, obj2.restitution);
+  let impulse = (2 * speed) / (obj1.mass + obj2.mass);
+  obj1.vx -= impulse * obj2.mass * vCollisionNorm.x;
+  obj1.vy -= impulse * obj2.mass * vCollisionNorm.y;
+  obj2.vx += impulse * obj1.mass * vCollisionNorm.x;
+  obj2.vy += impulse * obj1.mass * vCollisionNorm.y;
+  // Cập nhật vận tốc sau va chạm
+  document.getElementById("vx1").textContent = obj1.vx.toFixed(2);
+  document.getElementById("vy1").textContent = obj1.vy.toFixed(2);
+  document.getElementById("vx2").textContent = obj2.vx.toFixed(2);
+  document.getElementById("vy2").textContent = obj2.vy.toFixed(2);
+  document.getElementById("vnx").textContent = vCollisionNorm.x.toFixed(2);
+  document.getElementById("vny").textContent = vCollisionNorm.y.toFixed(2);
+}
 function rectIntersect(rect1, rect2) {
   // Check x and y for overlap
   if (
