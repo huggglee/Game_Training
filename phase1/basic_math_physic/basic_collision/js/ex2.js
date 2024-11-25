@@ -65,7 +65,7 @@ function handleCollision(obj1, obj2) {
   obj1.vy -= impulse * obj2.mass * vCollisionNorm.y;
   obj2.vx += impulse * obj1.mass * vCollisionNorm.x;
   obj2.vy += impulse * obj1.mass * vCollisionNorm.y;
-  // Cập nhật vận tốc sau va chạm
+  
   document.getElementById("vx1").textContent = obj1.vx.toFixed(2);
   document.getElementById("vy1").textContent = obj1.vy.toFixed(2);
   document.getElementById("vx2").textContent = obj2.vx.toFixed(2);
