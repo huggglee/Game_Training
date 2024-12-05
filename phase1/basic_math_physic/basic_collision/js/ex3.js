@@ -89,11 +89,11 @@ function areCellsOverlapping(cells1, cells2) {
 function getHighlightCells(object) {
   const startCol = Math.floor((object.x - (object.radius || 0)) / cellSize);
   const endCol = Math.floor(
-    (object.x + (object.width || object.radius * 2)) / cellSize
+    (object.x + (object.width || object.radius )) / cellSize
   );
   const startRow = Math.floor((object.y - (object.radius || 0)) / cellSize);
   const endRow = Math.floor(
-    (object.y + (object.height || object.radius * 2)) / cellSize
+    (object.y + (object.height || object.radius )) / cellSize
   );
 
   const cols = Math.ceil(canvas.width / cellSize);

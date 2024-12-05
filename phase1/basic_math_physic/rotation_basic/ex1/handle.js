@@ -59,6 +59,8 @@ class Rectangle {
   }
 }
 
+
+
 function gameLoop() {
   context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -70,4 +72,33 @@ function gameLoop() {
     shapes[i].draw();
   }
   window.requestAnimationFrame(gameLoop);
+}
+function keydown(event, shape) {
+  switch (event.key) {
+    case "ArrowUp":
+      shape.acceleration += 0.005;
+      break;
+    case "ArrowDown":
+      shape.acceleration -= 0.005;
+      break;
+    case "ArrowLeft":
+      shape.direction = -1;
+      break;
+    case "ArrowRight":
+      shape.direction = 1;
+      break;
+    default:
+      break;
+  }
+}
+
+function keyup(event, shape) {
+  switch (event.key) {
+    case "ArrowUp":
+    case "ArrowDown":
+      shape.acceleration = 0;
+      break;
+    default:
+      break;
+  }
 }
