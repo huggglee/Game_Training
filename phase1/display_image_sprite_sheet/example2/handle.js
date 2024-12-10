@@ -55,7 +55,7 @@ draw() {
   // Xoay hình ảnh và vẽ sprite
   this.context.save(); // Lưu trạng thái ban đầu
   this.context.translate(this.x, this.y); // Chuyển đến vị trí đối tượng
-  this.context.rotate((Math.PI / 180) * this.angle); // Xoay theo góc
+  this.context.rotate((Math.PI / 180) * (this.angle+90)); // Xoay theo góc
   this.context.translate(-this.x, -this.y); // Quay lại vị trí gốc
 
   this.context.drawImage(
