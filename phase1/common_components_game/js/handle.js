@@ -1,12 +1,14 @@
-import { GameManager } from "./GameManager.js";
+import { GameManager } from "./gameManager.js";
 import { InputController } from "./InputController.js";
 import { RectCollider } from "./RectCollider.js";
+import { AudioManager } from "./AudioManager.js";
 
 let canvas;
 let context;
 let player;
 let inputController;
 let gameManager;
+let audioManager;
 let Fishs = [];
 
 class Player extends RectCollider {
@@ -15,30 +17,36 @@ class Player extends RectCollider {
     this.speed = speed;
     this.img = new Image();
     this.img.src = imgSrc;
-    this.direction = "right"; 
-    this.score = 0; 
-    this.lives = 3; 
+    this.direction = "right";
+    this.score = 0;
+    this.lives = 3;
   }
 
   update(inputController) {
     if (inputController.isKeyPressed("ArrowLeft")) {
       this.x -= this.speed;
-      this.direction = "left"; 
+      this.direction = "left";
     }
     if (inputController.isKeyPressed("ArrowRight")) {
       this.x += this.speed;
-      this.direction = "right"; 
+      this.direction = "right";
     }
   }
 
   draw(context) {
-    context.save(); 
+    context.save();
     context.translate(this.x + this.width / 2, this.y + this.height / 2); // Di chuyển điểm gốc đến giữa player
     if (this.direction === "left") {
       context.scale(-1, 1); // Lật hình ảnh theo trục X
     }
-    context.drawImage(this.img, -this.width / 2, -this.height / 2, this.width, this.height);
-    context.restore(); 
+    context.drawImage(
+      this.img,
+      -this.width / 2,
+      -this.height / 2,
+      this.width,
+      this.height
+    );
+    context.restore();
 
     // // Vẽ hitbox
     // context.beginPath();
@@ -61,7 +69,7 @@ class Fish extends RectCollider {
   }
 
   draw(context) {
-    context.drawImage(this.img,this.x, this.y, this.width, this.height);
+    context.drawImage(this.img, this.x, this.y, this.width, this.height);
 
     // Vẽ hitbox
     // context.beginPath();
@@ -76,11 +84,22 @@ function init() {
   context = canvas.getContext("2d");
   inputController = new InputController();
   gameManager = new GameManager();
-  player = new Player(canvas.width / 2, canvas.height - 115, 80, 120, 5, "./img/player.png");
+  audioManager = new AudioManager();
+  player = new Player(
+    canvas.width / 2,
+    canvas.height - 115,
+    80,
+    120,
+    5,
+    "./img/player.png"
+  );
   player.img.onload = () => {
     gameLoop();
+    audioManager.loadSound("background", "./audio/background.mp3");
+    audioManager.loadSound("collect", "./audio/collect.mp3");
+    audioManager.loadSound("gameOver", "./audio/game_over.mp3");
+    // audioManager.playSound("background");
   };
-
   // Tạo ngôi sao ban đầu
   for (let i = 0; i < 5; i++) {
     createFish();
@@ -89,10 +108,10 @@ function init() {
 
 function createFish() {
   const x = Math.random() * canvas.width;
-  const y = -50; 
+  const y = -50;
   const width = 50;
   const height = 25;
-  const speed = 2 + Math.random() * 2; 
+  const speed = 2 + Math.random() * 2;
   const imgSrc = "./img/fish.jpg";
   const fish = new Fish(x, y, width, height, speed, imgSrc);
   Fishs.push(fish);
@@ -100,6 +119,7 @@ function createFish() {
 
 function gameLoop() {
   if (gameManager.state === "gameover") {
+    audioManager.playSound("gameOver");
     drawGameOver();
     return;
   }
@@ -116,19 +136,19 @@ function gameLoop() {
     Fish.draw(context);
 
     if (player.checkCollision(Fish)) {
+      audioManager.playSound("collect");
       Fishs.splice(i, 1); // Loại bỏ fish khỏi mảng
-      player.score += 10; 
-      gameManager.updateScore(10); 
-      createFish(); 
+      player.score += 10;
+      gameManager.updateScore(10);
+      createFish();
     }
-
 
     if (Fish.y > canvas.height) {
       Fishs.splice(i, 1);
-      createFish(); 
-      player.lives--; 
+      createFish();
+      player.lives--;
       if (player.lives <= 0) {
-        gameManager.setState("gameover"); 
+        gameManager.setState("gameover");
       }
     }
   }
