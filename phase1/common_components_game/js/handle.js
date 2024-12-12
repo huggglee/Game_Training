@@ -1,4 +1,4 @@
-import { GameManager } from "./gameManager.js";
+import { GameManager } from "./GameManager.js";
 import { InputController } from "./InputController.js";
 import { RectCollider } from "./RectCollider.js";
 import { AudioManager } from "./AudioManager.js";
