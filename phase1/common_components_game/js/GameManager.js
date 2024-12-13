@@ -1,6 +1,7 @@
 export class GameManager {
   constructor() {
     this.score = 0;
+    this.live = 3;
     this.state = "playing";
   }
 
@@ -14,6 +15,7 @@ export class GameManager {
 
   resetGame() {
     this.score = 0;
+    this.live =3;
     this.state = "playing";
   }
 }

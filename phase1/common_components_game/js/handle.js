@@ -10,6 +10,10 @@ let inputController;
 let gameManager;
 let audioManager;
 let Fishs = [];
+let timeGap = 4500;
+let fishInterval;
+let fishSpeed = 1;
+// let reset_btn;
 
 class Player extends RectCollider {
   constructor(x, y, width, height, speed, imgSrc) {
@@ -18,8 +22,6 @@ class Player extends RectCollider {
     this.img = new Image();
     this.img.src = imgSrc;
     this.direction = "right";
-    this.score = 0;
-    this.lives = 3;
   }
 
   update(inputController) {
@@ -30,6 +32,11 @@ class Player extends RectCollider {
     if (inputController.isKeyPressed("ArrowRight")) {
       this.x += this.speed;
       this.direction = "right";
+    }
+    if (this.x < 0) {
+      this.x = 0;
+    } else if (this.x + this.width > canvas.width){
+      this.x = canvas.width -this.width;
     }
   }
 
@@ -85,6 +92,8 @@ function init() {
   inputController = new InputController();
   gameManager = new GameManager();
   audioManager = new AudioManager();
+  // reset_btn = document.getElementById("resetButton")
+  // reset_btn.addEventListener('click', gameManager.resetGame);
   player = new Player(
     canvas.width / 2,
     canvas.height - 115,
@@ -93,43 +102,71 @@ function init() {
     5,
     "./img/player.png"
   );
-  player.img.onload = () => {
-    gameLoop();
-    audioManager.loadSound("background", "./audio/background.mp3");
-    audioManager.loadSound("collect", "./audio/collect.mp3");
-    audioManager.loadSound("gameOver", "./audio/game_over.mp3");
-    // audioManager.playSound("background");
-  };
+  audioManager.loadSound("background", "./audio/background.mp3");
+  audioManager.loadSound("collect", "./audio/collect.mp3");
+  audioManager.loadSound("gameOver", "./audio/game_over.mp3");
+
   // Tạo ngôi sao ban đầu
-  for (let i = 0; i < 5; i++) {
-    createFish();
-  }
+  // for (let i = 0; i < 5; i++) {
+  //   createFish();
+  // }
+  // player.img.onload = () => {
+  //   gameLoop();
+
+  //   // audioManager.playSound("background");
+  // };
+  createFish();
+  fishInterval = setInterval(createFish, timeGap);
+
+  requestAnimationFrame(gameLoop);
 }
 
 function createFish() {
-  const x = Math.random() * canvas.width;
+  const x = Math.random() * (canvas.width - 50);
   const y = -50;
   const width = 50;
   const height = 25;
-  const speed = 2 + Math.random() * 2;
+  const speed = fishSpeed + Math.random();
   const imgSrc = "./img/fish.jpg";
   const fish = new Fish(x, y, width, height, speed, imgSrc);
   Fishs.push(fish);
+}
+function updateFishInterval() {
+  clearInterval(fishInterval); // Xóa khoảng cách cũ
+  fishInterval = setInterval(createFish, timeGap); // Thiết lập khoảng cách mới
 }
 
 function gameLoop() {
   if (gameManager.state === "gameover") {
     audioManager.playSound("gameOver");
-    drawGameOver();
+    // drawGameOver();
+
     return;
   }
-
+  if (gameManager.score > 50 && gameManager.score <= 100) {
+    if (timeGap !== 3000) {
+      fishSpeed = 1.5;
+      timeGap = 3000;
+      updateFishInterval();
+    }
+  } else if (gameManager.score > 100 && gameManager.score <= 200) {
+    if (timeGap !== 2000) {
+      fishSpeed = 1.8;
+      timeGap = 2000;
+      updateFishInterval();
+    }
+  } else if (gameManager.score > 200) {
+    if (timeGap !== 1000) {
+      fishSpeed = 2.2;
+      timeGap = 1000;
+      updateFishInterval();
+    }
+  }
   context.clearRect(0, 0, canvas.width, canvas.height);
 
   player.update(inputController);
   player.draw(context);
 
-  // Cập nhật và vẽ các ngôi sao
   for (let i = Fishs.length - 1; i >= 0; i--) {
     const Fish = Fishs[i];
     Fish.update();
@@ -138,16 +175,13 @@ function gameLoop() {
     if (player.checkCollision(Fish)) {
       audioManager.playSound("collect");
       Fishs.splice(i, 1); // Loại bỏ fish khỏi mảng
-      player.score += 10;
       gameManager.updateScore(10);
-      createFish();
     }
 
     if (Fish.y > canvas.height) {
       Fishs.splice(i, 1);
-      createFish();
-      player.lives--;
-      if (player.lives <= 0) {
+      gameManager.live--;
+      if (gameManager.live <= 0) {
         gameManager.setState("gameover");
       }
     }
@@ -161,12 +195,12 @@ function gameLoop() {
 function drawHUD() {
   context.fillStyle = "black";
   context.font = "20px Arial";
-  context.fillText("Score: " + player.score, 10, 20);
-  context.fillText("Lives: " + player.lives, 10, 50);
+  context.fillText("Score: " + gameManager.score, 10, 20);
+  context.fillText("Lives: " + gameManager.live, 10, 50);
 }
 
-function drawGameOver() {
-  context.fillStyle = "red";
-  context.font = "50px Arial";
-  context.fillText("Game Over", canvas.width / 2 - 150, canvas.height / 2);
-}
+// function drawGameOver() {
+//   context.fillStyle = "red";
+//   context.font = "50px Arial";
+//   context.fillText("Game Over", canvas.width / 2 - 150, canvas.height / 2);
+// }

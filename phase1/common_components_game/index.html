@@ -24,11 +24,29 @@
         .img {
             display: none;
         }
+        #resetButton {
+            /* display: none; */
+            position: absolute;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 1;
+            /* Đảm bảo nút nằm trên canvas */
+        }
+
+        #resetButton:hover {
+            background-color: #d32f2f;
+        }
     </style>
 </head>
 <body>
     <div class="canvasBox">
         <canvas id="canvas" width="800" height="600"></canvas>
+        <!-- <button id="resetButton">Restart</button> -->
     </div>
     <script type="module" src="./js/handle.js"></script>
 </body>
