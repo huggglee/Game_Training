@@ -22,8 +22,8 @@ function init() {
 
 function loop() {
   context.clearRect(0, 0, canvas.width, canvas.height);
-  player.draw(context);
-  player.update(inputController);
+  // player.draw(context);
+  // player.update(inputController);
   map.draw(context);
   requestAnimationFrame(loop);
 }
