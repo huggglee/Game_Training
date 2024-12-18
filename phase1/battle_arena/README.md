@@ -1,1 +1,1 @@
-[battle arena](https://huggglee.github.io/Game_Training/phase1/battle-arena/main/index.html)
+[battle arena](https://huggglee.github.io/Game_Training/phase1/battle_arena/main/index.html)
