@@ -14,7 +14,7 @@ function init() {
   canvas = document.getElementById("canvas");
   context = canvas.getContext("2d");
   inputController = new InputController();
-  player = new Player(200, 350, "../asset/img/Player/Gun/Idle/idle.png");
+  player = new Player(200, 350, "../asset/img/Player/Gun/Idle/Idle.png");
 
   initMap();
   window.requestAnimationFrame(loop);
