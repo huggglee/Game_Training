@@ -14,7 +14,7 @@ function init() {
   canvas = document.getElementById("canvas");
   context = canvas.getContext("2d");
   inputController = new InputController();
-  player = new Player(200, 350, "../asset/img/Player/Gun/Idle/idle.png");
+  player = new Player(200, 350, "../asset/img/player/gun/idle/idle.png");
 
   initMap();
   window.requestAnimationFrame(loop);
@@ -30,10 +30,12 @@ function loop() {
 
 function initMap() {
   map = new Map("../asset/img/Background/Background2.jpg");
-  map.addGround(200, 400, 270, 60, "../asset/img/Ground/grasstop.png");
-  map.addGround(730, 400, 270, 60, "../asset/img/Ground/grasstop.png");
-  map.addGround(330, 260, 540, 60, "../asset/img/Ground/grasstop.png");
-  map.addGround(120, 120, 300, 60, "../asset/img/Ground/grasstop.png");
-  map.addGround(780, 120, 300, 60, "../asset/img/Ground/grasstop.png");
-  map.addGround(525, 120, 150, 60, "../asset/img/Ground/grasstop.png");
+  map.addGround(200, 400, 270, 60, "../asset/img/ground/grasstop.png");
+  map.addGround(200, 400, 270, 60, "../asset/img/ground/grasstop.png");
+  map.addGround(200, 400, 270, 60, "../asset/img/ground/grasstop.png");
+  map.addGround(730, 400, 270, 60, "../asset/img/ground/grasstop.png");
+  map.addGround(330, 260, 540, 60, "../asset/img/ground/grasstop.png");
+  map.addGround(120, 120, 300, 60, "../asset/img/ground/grasstop.png");
+  map.addGround(780, 120, 300, 60, "../asset/img/ground/grasstop.png");
+  map.addGround(525, 120, 150, 60, "../asset/img/ground/grasstop.png");
 }
