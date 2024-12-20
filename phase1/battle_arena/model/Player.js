@@ -5,11 +5,30 @@ export class Player extends RectCollider {
     super(x, y);
     this.speed = 3;
     this.img = new Image();
-    this.direction="right";
+    this.direction = "right";
     this.loadImage(imgSrc);
+    this.gravity = 0;
+    this.isOnGround = false;
   }
 
-  update(inputController) {
+  update(inputController, grounds) {
+    // console.log(this.isOnGround);
+    console.log(this.jumpCount);
+    
+    // Kiểm tra Player có đứng trên mặt đất không
+    this.checkIsOnGround(grounds);
+
+    if (this.isOnGround) {
+      this.gravity = 0;
+      this.img.src = "../asset/img/player/gun/idle/idle.png";
+
+    } else {
+      this.gravity +=0.5;
+    }
+
+    this.y += this.gravity;
+
+    // Di chuyển trái/phải
     if (inputController.isKeyPressed("ArrowLeft")) {
       this.x -= this.speed;
       this.direction = "left";
@@ -18,9 +37,15 @@ export class Player extends RectCollider {
       this.x += this.speed;
       this.direction = "right";
     }
-    if (inputController.isKeyPressed("ArrowUp")) {
-      this.y -= 30;
-    }
+
+    // Nhảy khi phím ArrowUp được nhấn và không vượt quá tối đa
+    if (inputController.isKeyPressed("ArrowUp")&& this.isOnGround ) {
+        this.y -= 120; 
+        this.img.src = "../asset/img/player/gun/jump/jump.png";
+      
+    } 
+
+    // Giới hạn di chuyển Player trong canvas
     if (this.x < 0) {
       this.x = 0;
     } else if (this.x + this.width > canvas.width) {
@@ -31,16 +56,21 @@ export class Player extends RectCollider {
   loadImage(imgSrc) {
     this.img.src = imgSrc;
     this.img.onload = () => {
-      this.width = this.img.width / 6;
-      this.height = this.img.height / 6;
+      this.width = this.img.width / 4;
+      this.height = this.img.height / 4;
     };
+    
   }
+
   draw(context) {
     context.save();
     if (this.direction === "left") {
       context.translate(this.x + this.width / 2, this.y + this.height / 2);
       context.scale(-1, 1); // Lật hình ảnh theo trục X
-      context.translate(-(this.x + this.width / 2), -(this.y + this.height / 2));
+      context.translate(
+        -(this.x + this.width / 2),
+        -(this.y + this.height / 2)
+      );
     }
     context.drawImage(this.img, this.x, this.y, this.width, this.height);
     context.restore();
@@ -49,5 +79,22 @@ export class Player extends RectCollider {
     context.beginPath();
     context.rect(this.x, this.y, this.width, this.height);
     context.stroke();
+  }
+
+  checkIsOnGround(grounds) {
+    this.isOnGround = false;
+
+    grounds.forEach((ground) => {
+      const isHorizontallyAligned =
+        this.x + this.width > ground.x && this.x < ground.x + ground.width;
+      const isVerticallyAligned =
+        this.y + this.height >= ground.y &&
+        this.y + this.height <= ground.y + ground.height;
+
+      if (isHorizontallyAligned && isVerticallyAligned) {
+        this.isOnGround = true;
+        this.y = ground.y - this.height; // Adjust player position to be on top of the ground
+      }
+    });
   }
 }

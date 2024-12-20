@@ -17,11 +17,14 @@ export class Map {
   draw(context) {
     // context.imageSmoothingEnabled = true;
     // context.imageSmoothingQuality = "high";
-    // context.drawImage(
-    //   this.background,
-    //   0,
-    //   0,
-    // );
+    context.drawImage(
+      this.background,
+      0,
+      0,
+    );
     this.grounds.forEach((ground) => ground.draw(context));
+  }
+  getGrounds(){
+    return this.grounds;
   }
 }
