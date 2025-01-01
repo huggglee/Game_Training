@@ -15,7 +15,6 @@ export class Player extends RectCollider {
     // console.log(this.isOnGround);
     console.log(this.jumpCount);
     
-    // Kiểm tra Player có đứng trên mặt đất không
     this.checkIsOnGround(grounds);
 
     if (this.isOnGround) {
@@ -28,7 +27,6 @@ export class Player extends RectCollider {
 
     this.y += this.gravity;
 
-    // Di chuyển trái/phải
     if (inputController.isKeyPressed("ArrowLeft")) {
       this.x -= this.speed;
       this.direction = "left";
@@ -38,14 +36,12 @@ export class Player extends RectCollider {
       this.direction = "right";
     }
 
-    // Nhảy khi phím ArrowUp được nhấn và không vượt quá tối đa
     if (inputController.isKeyPressed("ArrowUp")&& this.isOnGround ) {
         this.y -= 120; 
         this.img.src = "../asset/img/player/gun/jump/jump.png";
       
     } 
 
-    // Giới hạn di chuyển Player trong canvas
     if (this.x < 0) {
       this.x = 0;
     } else if (this.x + this.width > canvas.width) {
@@ -66,7 +62,7 @@ export class Player extends RectCollider {
     context.save();
     if (this.direction === "left") {
       context.translate(this.x + this.width / 2, this.y + this.height / 2);
-      context.scale(-1, 1); // Lật hình ảnh theo trục X
+      context.scale(-1, 1); 
       context.translate(
         -(this.x + this.width / 2),
         -(this.y + this.height / 2)
@@ -93,7 +89,7 @@ export class Player extends RectCollider {
 
       if (isHorizontallyAligned && isVerticallyAligned) {
         this.isOnGround = true;
-        this.y = ground.y - this.height; // Adjust player position to be on top of the ground
+        this.y = ground.y - this.height; 
       }
     });
   }
