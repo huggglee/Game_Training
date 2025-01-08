@@ -9,6 +9,8 @@ export class Bullet extends RectCollider {
     this.damage=10;
     this.img.src = "../asset/img/bullet/bullet_1.png";
     this.angle = angle;
+    this.width = 0;
+    this.height = 0;
     this.loadImage();
 
     this.rotate = new Rotate();
@@ -23,6 +25,7 @@ export class Bullet extends RectCollider {
   update() {
     this.x += this.speed * Math.cos(this.angle);
     this.y += this.speed * Math.sin(this.angle); 
+    console.log(this.x);
   }
 
   draw(context) {

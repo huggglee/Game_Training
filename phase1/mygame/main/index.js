@@ -34,7 +34,8 @@ function loop() {
 function draw() {
   map.draw(context);
   player.draw(context);
-  player.bullets.forEach((bullet) => bullet.draw(context));
+  player.drawHUD(context);
+  // player.bullets.forEach((bullet) => bullet.draw(context));
   enemies.forEach((enemy) => enemy.draw(context));
 }
 
@@ -53,6 +54,7 @@ function checkCollisions() {
   checkCollisionsPlayer_Enemy();
   checkCollisionPlayer_Box();
   checkCollisionEnemy_Box();
+  checkCollisionEnemy();
 }
 
 function checkCollisionsBullet_Enemy() {
@@ -62,7 +64,8 @@ function checkCollisionsBullet_Enemy() {
         enemy.health -= bullet.damage;
         player.bullets.splice(bulletIndex, 1);
         if (enemy.health <= 0) {
-          // enemy.isAlive = false
+          enemy.isAlive = false;
+          map.shoot(enemy.x, enemy.y);
           enemies.splice(enemyIndex, 1);
         }
       }
@@ -135,14 +138,14 @@ function checkCollisionEnemy_Box() {
           if (dx > 0) {
             enemy.x = box.x + box.width;
           } else {
-            enemy.x = box.x - player.width;
+            enemy.x = box.x - enemy.width;
           }
         } else {
           // Va chạm theo trục y
           if (dy > 0) {
             enemy.y = box.y + box.height;
           } else {
-            enemy.y = box.y - player.height;
+            enemy.y = box.y - enemy.height;
           }
         }
       }
@@ -150,8 +153,46 @@ function checkCollisionEnemy_Box() {
   });
 }
 
+function checkCollisionEnemy() {
+  for (let i = 0; i < enemies.length; i++) {
+    for (let j = i + 1; j < enemies.length; j++) {
+      const enemy1 = enemies[i];
+      const enemy2 = enemies[j];
+      if (enemy1.checkCollision(enemy2)) {
+        // Đẩy enemy2 ra xa vị trí của enemy1
+        const dx = enemy2.x + enemy2.width / 2 - (enemy1.x + enemy1.width / 2);
+        const dy =
+          enemy2.y + enemy2.height / 2 - (enemy1.y + enemy1.height / 2);
+        const absDx = Math.abs(dx);
+        const absDy = Math.abs(dy);
+
+        if (absDx > absDy) {
+          if (dx > 0) {
+            enemy2.x = enemy1.x + enemy1.width;
+          } else {
+            enemy2.x = enemy1.x - enemy2.width;
+          }
+        } else {
+          if (dy > 0) {
+            enemy2.y = enemy1.y + enemy1.height;
+          } else {
+            enemy2.y = enemy1.y - enemy2.height;
+          }
+        }
+      }
+    }
+  }
+}
+
 function initComp() {
-  player = new Player(400, 500, "../asset/img/player/x1.png");
+  player = new Player(400, 500);
   map.initMap();
-  enemies = [new Enemy(100, 200), new Enemy(1000, 100), new Enemy(100, 300)];
+  enemies = [
+    new Enemy(100, 200), 
+    new Enemy(100, 100), 
+    new Enemy(100, 300),
+    new Enemy(400, 100),
+    new Enemy(1000, 300),
+    new Enemy(1000, 600),
+  ];
 }

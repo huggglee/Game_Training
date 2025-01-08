@@ -3,14 +3,14 @@ import { Rotate } from "../handle/Rotate.js";
 import { Bullet } from "./Bullet.js";
 
 export class Player extends RectCollider {
-  constructor(x, y, imgSrc) {
+  constructor(x, y, ) {
     super(x, y);
     this.speed = 4;
     this.angle = 0;
     this.health =100;
     this.state="alive"
     this.img = new Image();
-    this.loadImage(imgSrc);
+    this.loadImage();
     this.rotate = new Rotate();
     this.bullets = []; 
     this.mouseX = 0; 
@@ -23,8 +23,8 @@ export class Player extends RectCollider {
     });
   }
 
-  loadImage(imgSrc) {
-    this.img.src = imgSrc;
+  loadImage() {
+    this.img.src = "../asset/img/player/x1.png";
     this.img.onload = () => {
       this.width = this.img.width / 3;
       this.height = this.img.height / 3;
@@ -119,5 +119,16 @@ export class Player extends RectCollider {
       bullet.draw(context)
     });
 
+  }
+  drawHUD(context) {
+    context.fillStyle = "black";
+    context.fillRect(20, 20, 200, 20);
+
+    context.fillStyle = "red";
+    context.fillRect(20, 20, 2 * this.health, 20);
+
+    context.fillStyle = "white";
+    context.font = "16px Arial";
+    context.fillText(`Health: ${this.health}`, 20, 55);
   }
 }
