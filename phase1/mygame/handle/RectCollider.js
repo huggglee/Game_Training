@@ -1,27 +1,29 @@
 import { Collider } from "./Collider.js";
 export class RectCollider extends Collider {
-    constructor(x, y, width, height) {
-        super(x, y);
-        this.width = width;
-        this.height = height;
-    }
+  constructor(x, y, width, height, onCollide, owner) {
+    super(x, y, onCollide);
+    this.width = width;
+    this.height = height;
+    this.owner = owner;
+  }
 
-    checkCollision(other) {
-        if (other instanceof RectCollider) {
-            return (
-                this.x < other.x + other.width &&
-                this.x + this.width > other.x &&
-                this.y < other.y + other.height &&
-                this.y + this.height > other.y
-            );
-        } else if (other instanceof CircleCollider) {
-            const closestX = Math.max(this.x, Math.min(other.x, this.x + this.width));
-            const closestY = Math.max(this.y, Math.min(other.y, this.y + this.height));
-            const dx = other.x - closestX;
-            const dy = other.y - closestY;
-            return dx * dx + dy * dy < other.radius * other.radius;
-        }
-        return false;
+  checkCollision(other) {
+    // console.log("start");
+    // console.log(other.owner);
+    
+    if (other instanceof RectCollider) {
+      return (
+        this.x < other.x + other.width &&
+        this.x + this.width > other.x &&
+        this.y < other.y + other.height &&
+        this.y + this.height > other.y
+      );
     }
+    return false;
+  }
+
+  updatePosition(x, y) {
+    this.x = x;
+    this.y = y;
+  }
 }
-

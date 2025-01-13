@@ -1,20 +1,37 @@
 import { RectCollider } from "../handle/RectCollider.js";
 import { Rotate } from "../handle/Rotate.js";
 import { Bullet } from "./Bullet.js";
-
-export class Player extends RectCollider {
-  constructor(x, y, ) {
-    super(x, y);
+import { CollisionManager } from "../handle/CollisionManager.js";
+import { Box } from "./Box.js";
+import { Enemy } from "./Enemy.js";
+export class Player {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
     this.speed = 4;
     this.angle = 0;
-    this.health =100;
-    this.state="alive"
+    this.health = 100;
+    this.state = "alive";
     this.img = new Image();
     this.loadImage();
     this.rotate = new Rotate();
-    this.bullets = []; 
-    this.mouseX = 0; 
-    this.mouseY = 0; 
+    this.bullets = [];
+    this.mouseX = 0;
+    this.mouseY = 0;
+    this.img.src = "../asset/img/player/x1.png";
+    this.width = this.img.width / 3;
+    this.height = this.img.height / 3;
+
+    this.isColliding = false;
+    this.collider = new RectCollider(
+      x,
+      y,
+      this.width,
+      this.height,
+      this.onCollision.bind(this),
+      this
+    );
+    CollisionManager.instance.addCollider(this.collider);
 
     //di chuột
     window.addEventListener("mousemove", (event) => {
@@ -24,18 +41,19 @@ export class Player extends RectCollider {
   }
 
   loadImage() {
-    this.img.src = "../asset/img/player/x1.png";
-    this.img.onload = () => {
-      this.width = this.img.width / 3;
-      this.height = this.img.height / 3;
-    };
+    this.img.onload = () => {};
   }
 
   shoot() {
     const bulletX = this.x + this.width / 2;
     const bulletY = this.y + this.height / 2;
-    const bullet = new Bullet(bulletX, bulletY, this.angle); 
-    this.bullets.push(bullet); 
+    const bullet = new Bullet(bulletX, bulletY, this.angle, this);
+    this.bullets.push(bullet);
+  }
+
+  removeBullet(bullet) {
+    const index = this.bullets.indexOf(bullet);
+    this.bullets.splice(index, 1);
   }
 
   move(inputController) {
@@ -51,6 +69,7 @@ export class Player extends RectCollider {
     if (inputController.isKeyPressed("s")) {
       this.y += this.speed;
     }
+    this.collider.updatePosition(this.x, this.y);
 
     this.angle = Math.atan2(
       this.mouseY - (this.y + this.height / 2),
@@ -70,9 +89,12 @@ export class Player extends RectCollider {
     if (inputController.getMouseClick()) {
       this.shoot();
     }
-
+    let hitList = [];
     this.bullets.forEach((bullet, index) => {
       bullet.update();
+      if (bullet.isColliding) {
+        hitList.push(bullet);
+      }
 
       if (
         bullet.x < 0 ||
@@ -83,6 +105,12 @@ export class Player extends RectCollider {
         this.bullets.splice(index, 1);
       }
     });
+
+    if (hitList.length > 0) {
+      hitList.forEach((bullet, bulletIndex) => {
+        this.bullets.splice(bulletIndex, 1);
+      });
+    }
 
     //gioi han pham vi player
     if (this.x < 20) {
@@ -96,7 +124,6 @@ export class Player extends RectCollider {
     } else if (this.y + this.height > canvas.height - 50) {
       this.y = canvas.height - this.height - 50;
     }
-
   }
 
   draw(context) {
@@ -114,11 +141,10 @@ export class Player extends RectCollider {
     context.rect(this.x, this.y, this.width, this.height);
     context.stroke();
     context.closePath();
-    
-    this.bullets.forEach((bullet) => {
-      bullet.draw(context)
-    });
 
+    this.bullets.forEach((bullet) => {
+      bullet.draw(context);
+    });
   }
   drawHUD(context) {
     context.fillStyle = "black";
@@ -130,5 +156,39 @@ export class Player extends RectCollider {
     context.fillStyle = "white";
     context.font = "16px Arial";
     context.fillText(`Health: ${this.health}`, 20, 55);
+  }
+
+  onCollision(otherCollider) {
+    if (otherCollider.owner instanceof Box) {
+      const dx =
+        this.x +
+        this.width / 2 -
+        (otherCollider.owner.x + otherCollider.owner.width / 2);
+      const dy =
+        this.y +
+        this.height / 2 -
+        (otherCollider.owner.y + otherCollider.owner.height / 2);
+
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
+
+      if (absDx > absDy) {
+        // Va chạm theo trục x
+        if (dx > 0) {
+          this.x = otherCollider.owner.x + otherCollider.owner.width;
+        } else {
+          this.x = otherCollider.owner.x - this.width;
+        }
+      } else {
+        // Va chạm theo trục y
+        if (dy > 0) {
+          this.y = otherCollider.owner.y + otherCollider.owner.height;
+        } else {
+          this.y = otherCollider.owner.y - this.height;
+        }
+      }
+    } else if (otherCollider.owner instanceof Enemy){
+      this.health -= otherCollider.owner.damage;
+    }
   }
 }
