@@ -7,7 +7,7 @@ export class CollisionManager {
 
   addCollider(collider) {
     this.colliders.push(collider);
-    console.log(collider.owner);
+    // console.log(collider.owner);
   }
 
   removeCollider(collider) {
@@ -16,7 +16,7 @@ export class CollisionManager {
   }
 
   checkCollisions() {
-    console.log(this.colliders);
+    // console.log(this.colliders);
     for (let i = 0; i < this.colliders.length; i++) {
       for (let j = i + 1; j < this.colliders.length; j++) {
         const colliderA = this.colliders[i];

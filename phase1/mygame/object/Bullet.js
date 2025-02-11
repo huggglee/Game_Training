@@ -8,7 +8,7 @@ export class Bullet {
   constructor(x, y, angle, owner) {
     this.x = x;
     this.y = y;
-    this.speed = 3;
+    this.speed = 300;
     this.context = null;
     this.img = new Image();
     this.damage = 10;
@@ -39,8 +39,8 @@ export class Bullet {
     };
   }
   update() {
-    this.x += this.speed * Math.cos(this.angle);
-    this.y += this.speed * Math.sin(this.angle);
+    this.x += this.speed * Math.cos(this.angle) * window.dt / 1000;
+    this.y += this.speed * Math.sin(this.angle) * window.dt / 1000;
     this.collider.updatePosition(this.x, this.y);
     // console.log(this.x);
   }
@@ -70,7 +70,7 @@ export class Bullet {
   }
 
   onCollision(otherCollider) {
-    console.log(otherCollider.owner.type);
+    // console.log(otherCollider.owner.type);
     // console.log(this.owner);
     if (otherCollider.owner instanceof Enemy) {
       this.isColliding = true;

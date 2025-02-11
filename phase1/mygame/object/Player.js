@@ -4,6 +4,7 @@ import { Bullet } from "./Bullet.js";
 import { CollisionManager } from "../handle/CollisionManager.js";
 import { Box } from "./Box.js";
 import { Enemy } from "./Enemy.js";
+import { AudioManager } from "../handle/AudioManager.js";
 export class Player {
   constructor(x, y) {
     this.x = x;
@@ -49,6 +50,7 @@ export class Player {
     const bulletY = this.y + this.height / 2;
     const bullet = new Bullet(bulletX, bulletY, this.angle, this);
     this.bullets.push(bullet);
+    AudioManager.instance.playSound("shoot");
   }
 
   removeBullet(bullet) {
@@ -187,8 +189,10 @@ export class Player {
           this.y = otherCollider.owner.y - this.height;
         }
       }
-    } else if (otherCollider.owner instanceof Enemy){
+    } else if (otherCollider.owner instanceof Enemy) {
       this.health -= otherCollider.owner.damage;
+      AudioManager.instance.loadSound("shoot", "../asset/audio/shoot.mp3");
+      AudioManager.instance.playSound("player_hurt");
     }
   }
 }

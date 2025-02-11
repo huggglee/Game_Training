@@ -4,7 +4,7 @@ import { Rotate } from "../handle/Rotate.js";
 import { Box } from "./Box.js";
 import { Bullet } from "./Bullet.js";
 import { Player } from "./Player.js";
-
+import { AudioManager } from "../handle/AudioManager.js";
 export class Enemy {
   constructor(x, y) {
     this.x = x;
@@ -15,13 +15,14 @@ export class Enemy {
     this.angle = 0;
     this.health = 100;
     this.damage = 10;
+    this.range = 400;
+    // this.isAttack = false;
     this.isAlive = true;
     this.img = new Image();
     this.imgIndex = 1;
-    this.img.src = `../asset/img/enemy/slime_${this.imgIndex}.png`;
-    this.width = this.img.width * 3;
-    this.height = this.img.height * 3;
-    // this.loadImage();
+    // this.width = 1;
+    // this.height = 1;
+    this.loadImage();
     setInterval(() => {
       let temp = (this.imgIndex % 6) + 1;
       this.changeIndex(temp);
@@ -31,8 +32,8 @@ export class Enemy {
     this.collider = new RectCollider(
       x,
       y,
-      this.width,
-      this.height,
+      1,
+      1,
       this.onCollision.bind(this),
       this
     );
@@ -63,10 +64,12 @@ export class Enemy {
   // }
 
   loadImage() {
-    // this.img.onload = () => {
-    //   this.width = this.img.width * 3;
-    //   this.height = this.img.height * 3;
-    // };
+    this.img.onload = () => {
+      this.width = this.img.width * 3;
+      this.height = this.img.height * 3;
+      this.collider.width = this.width;
+      this.collider.height = this.height;
+    };
     this.img.src = `../asset/img/enemy/slime_${this.imgIndex}.png`;
   }
 
@@ -76,15 +79,25 @@ export class Enemy {
   }
 
   update() {
-    this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
-    // console.log(this.width);
-    // console.log(this.height);
-    if (this.isAlive) {
-      this.x += this.speed * Math.cos(this.angle);
-      this.y += this.speed * Math.sin(this.angle);
+    if (this.health < 0 && this.isAlive) {
+      AudioManager.instance.playSound("slime_death");
+      this.isAlive = false;
+      CollisionManager.instance.removeCollider(this.collider);
     }
-    this.collider.updatePosition(this.x, this.y);
-
+    if(this.isAlive){
+      let distance = Math.sqrt(
+        (this.x - this.targetX) * (this.x - this.targetX) +
+          (this.y - this.targetY) * (this.y - this.targetY)
+      );
+      if (distance < this.range) {
+        this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+        // console.log(this.width);
+        // console.log(this.height);
+        this.x += this.speed * Math.cos(this.angle);
+        this.y += this.speed * Math.sin(this.angle);
+        this.collider.updatePosition(this.x, this.y);
+      }
+    }
     // this.bullets.forEach((bullet) => bullet.update());
   }
 
@@ -104,8 +117,14 @@ export class Enemy {
       this.isAlive = false;
       CollisionManager.instance.removeCollider(this.collider);
     } else if (otherCollider.owner instanceof Box) {
-      const dx = this.x + this.width / 2 - (otherCollider.owner.x + otherCollider.owner.width / 2);
-      const dy = this.y + this.height / 2 - (otherCollider.owner.y + otherCollider.owner.height / 2);
+      const dx =
+        this.x +
+        this.width / 2 -
+        (otherCollider.owner.x + otherCollider.owner.width / 2);
+      const dy =
+        this.y +
+        this.height / 2 -
+        (otherCollider.owner.y + otherCollider.owner.height / 2);
       const absDx = Math.abs(dx);
       const absDy = Math.abs(dy);
 

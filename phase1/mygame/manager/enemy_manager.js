@@ -2,8 +2,10 @@ import { Enemy } from "../object/Enemy.js";
 import { CollisionManager } from "../handle/CollisionManager.js";
 
 export class EnemyManager{
+    static instance = null;
     constructor(){
         this.enemies=[];
+        EnemyManager.instance = this;
     }
 
     init(enemiesData){
@@ -18,6 +20,7 @@ export class EnemyManager{
             enemy.changeTarget(x,y)
             enemy.update();
         })
+        this.enemies = this.enemies.filter(enemy => enemy.isAlive);
     }
 
     addEnemy(x,y){
@@ -29,6 +32,10 @@ export class EnemyManager{
         this.enemies.forEach(enemy=>{
             enemy.draw(context);
         })
+    }
+    checkClearEnemies(){
+        // console.log(this.enemies.length);
+        return this.enemies.length === 0;
     }
 
 }
