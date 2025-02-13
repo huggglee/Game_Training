@@ -1,41 +1,68 @@
 import { Enemy } from "../object/Enemy.js";
 import { CollisionManager } from "../handle/CollisionManager.js";
 
-export class EnemyManager{
-    static instance = null;
-    constructor(){
-        this.enemies=[];
-        EnemyManager.instance = this;
+export class EnemyManager {
+  static instance = null;
+
+  constructor() {
+    this.enemies = [];
+    this.allEnemies = [];
+    this.waves = [];
+    this.currentWave = 0;
+    this.isSpawnComplete = false;
+    this.waveInterval = null; 
+    EnemyManager.instance = this;
+  }
+
+  init(enemiesData, enemiesPerWave, waveDelay) {
+    this.enemies = [];
+    this.allEnemies = enemiesData;
+    this.currentWave = 0;
+    this.isSpawnComplete = false;
+    this.waves = [];
+
+    for (let i = 0; i < enemiesData.length; i += enemiesPerWave) {
+      this.waves.push(enemiesData.slice(i, i + enemiesPerWave));
     }
 
-    init(enemiesData){
-        this.enemies=[];
-        enemiesData.forEach(enemy => {
-            this.addEnemy(enemy.x,enemy.y);
-        });
-    }
+    this.waveInterval = setInterval(() => {
+      this.startWaves();
+    }, waveDelay);
+  }
 
-    update(x,y){
-        this.enemies.forEach(enemy =>{
-            enemy.changeTarget(x,y)
-            enemy.update();
-        })
-        this.enemies = this.enemies.filter(enemy => enemy.isAlive);
+  startWaves() {
+    if (this.currentWave >= this.waves.length) {
+      this.isSpawnComplete = true;
+      clearInterval(this.waveInterval); 
+      return;
     }
+    this.waves[this.currentWave].forEach((enemyData) => {
+      this.spawnEnemy(enemyData.x, enemyData.y);
+    });
+    this.currentWave++;
+  }
 
-    addEnemy(x,y){
-        let enemy = new Enemy(x,y);
-        this.enemies.push(enemy);
-    }
+  update(playerX, playerY) {
+    this.enemies.forEach((enemy) => {
+      enemy.changeTarget(playerX, playerY);
+      enemy.update();
+    });
 
-    draw(context){
-        this.enemies.forEach(enemy=>{
-            enemy.draw(context);
-        })
-    }
-    checkClearEnemies(){
-        // console.log(this.enemies.length);
-        return this.enemies.length === 0;
-    }
+    this.enemies = this.enemies.filter((enemy) => enemy.isAlive);
+  }
 
+  spawnEnemy(x, y) {
+    let enemy = new Enemy(x, y);
+    this.enemies.push(enemy);
+  }
+
+  draw(context) {
+    this.enemies.forEach((enemy) => {
+      enemy.draw(context);
+    });
+  }
+
+  checkClearEnemies() {
+    return this.isSpawnComplete && this.enemies.length === 0;
+  }
 }

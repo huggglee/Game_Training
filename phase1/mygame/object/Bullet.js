@@ -75,7 +75,7 @@ export class Bullet {
     if (otherCollider.owner instanceof Enemy) {
       this.isColliding = true;
       CollisionManager.instance.removeCollider(this.collider);
-      console.log("enemy bị bắn");
+      // console.log("enemy bị bắn");
     } else if (otherCollider.owner instanceof Box){
       this.isColliding = true;
       CollisionManager.instance.removeCollider(this.collider);

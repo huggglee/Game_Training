@@ -12,7 +12,7 @@ export class Level {
   init(data,player) {
     this.player = player;
     BoxManager.instance.initMap(data.boxes);
-    EnemyManager.instance.init(data.enemies);
+    EnemyManager.instance.init(data.enemies,3,3000);
   }
 
   draw(context) {
