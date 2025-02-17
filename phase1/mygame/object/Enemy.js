@@ -13,7 +13,7 @@ export class Enemy {
     this.targetY = y;
     this.speed = 3;
     this.angle = 0;
-    this.health = 100;
+    this.health = 50;
     this.damage = 10;
     this.range = 400;
     // this.isAttack = false;
@@ -49,6 +49,7 @@ export class Enemy {
       context.rect(this.x, this.y, this.width, this.height);
       context.stroke();
       context.closePath();
+      this.drawHUD(context);
     }
 
     // this.bullets.forEach((bullet) => {
@@ -69,6 +70,7 @@ export class Enemy {
       this.height = this.img.height * 3;
       this.collider.width = this.width;
       this.collider.height = this.height;
+      console.log(this.width)
     };
     this.img.src = `../asset/img/enemy/slime_${this.imgIndex}.png`;
   }
@@ -79,7 +81,7 @@ export class Enemy {
   }
 
   update() {
-    if (this.health < 0 && this.isAlive) {
+    if (this.health <= 0 && this.isAlive) {
       AudioManager.instance.playSound("slime_death");
       this.isAlive = false;
       CollisionManager.instance.removeCollider(this.collider);
@@ -144,5 +146,10 @@ export class Enemy {
         }
       }
     }
+  }
+
+  drawHUD(context) {
+    context.fillStyle = "red";
+    context.fillRect(this.x, this.y, this.health, 5);
   }
 }

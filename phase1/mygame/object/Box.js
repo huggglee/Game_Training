@@ -9,7 +9,7 @@ export class Box {
     this.x = x;
     this.y = y;
     // this.type = type;
-    this.health = 30;
+    this.health = 20;
     this.img = new Image();
     this.img.src = `../asset/img/box/box_2.png`;
     // this.width = this.img.width ;
