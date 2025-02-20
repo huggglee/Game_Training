@@ -16,12 +16,9 @@ export class Enemy {
     this.health = 50;
     this.damage = 10;
     this.range = 400;
-    // this.isAttack = false;
     this.isAlive = true;
     this.img = new Image();
     this.imgIndex = 1;
-    // this.width = 1;
-    // this.height = 1;
     this.loadImage();
     setInterval(() => {
       let temp = (this.imgIndex % 6) + 1;
@@ -51,18 +48,7 @@ export class Enemy {
       context.closePath();
       this.drawHUD(context);
     }
-
-    // this.bullets.forEach((bullet) => {
-    //   bullet.draw(context);
-    // });
   }
-
-  // shoot() {
-  //   for (let i = 0; i < 10; i++) {
-  //     this.bullets.push(new Bullet(this.x, this.y, (i * Math.PI) / 5));
-  //   }
-  //   // console.log(this.bullets);
-  // }
 
   loadImage() {
     this.img.onload = () => {
@@ -70,7 +56,6 @@ export class Enemy {
       this.height = this.img.height * 3;
       this.collider.width = this.width;
       this.collider.height = this.height;
-      console.log(this.width)
     };
     this.img.src = `../asset/img/enemy/slime_${this.imgIndex}.png`;
   }
@@ -86,7 +71,7 @@ export class Enemy {
       this.isAlive = false;
       CollisionManager.instance.removeCollider(this.collider);
     }
-    if(this.isAlive){
+    if (this.isAlive) {
       let distance = Math.sqrt(
         (this.x - this.targetX) * (this.x - this.targetX) +
           (this.y - this.targetY) * (this.y - this.targetY)
@@ -100,7 +85,6 @@ export class Enemy {
         this.collider.updatePosition(this.x, this.y);
       }
     }
-    // this.bullets.forEach((bullet) => bullet.update());
   }
 
   changeTarget(targetX, targetY) {
@@ -109,13 +93,13 @@ export class Enemy {
   }
 
   onCollision(otherCollider) {
-    // console.log(otherCollider.owner.type );
-    // console.log("123",this.collisionManager);
-    if (otherCollider.owner instanceof Bullet) {
+    if (
+      otherCollider.owner instanceof Bullet &&
+      otherCollider.owner.owner instanceof Player
+    ) {
       this.health -= otherCollider.owner.damage;
       console.log("enemy bi bắn");
     } else if (otherCollider.owner instanceof Player) {
-      // otherCollider.owner.health -= 10;
       this.isAlive = false;
       CollisionManager.instance.removeCollider(this.collider);
     } else if (otherCollider.owner instanceof Box) {

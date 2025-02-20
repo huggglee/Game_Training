@@ -19,14 +19,8 @@ export class LevelManager {
     }
     const levelData = await this.levelLoader.loadLevel(this.currentLevelId);
 
-    if(!this.player){
-      this.player = new Player(levelData.player.x,levelData.player.y);
-    } else {
-      this.player.x = levelData.player.x;
-      this.player.y = levelData.player.y;
-    }
     this.currentLevel = new Level();
-    this.currentLevel.init(levelData,this.player);
+    this.currentLevel.init(levelData);
   }
   unloadCurrentLevel() {
     // Cleanup resources

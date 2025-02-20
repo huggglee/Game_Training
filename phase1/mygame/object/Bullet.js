@@ -1,8 +1,10 @@
 import { CollisionManager } from "../handle/CollisionManager.js";
 import { RectCollider } from "../handle/RectCollider.js";
 import { Rotate } from "../handle/Rotate.js";
+import { Boss } from "./Boss.js";
 import { Box } from "./Box.js";
 import { Enemy } from "./Enemy.js";
+import { Player } from "./Player.js";
 
 export class Bullet {
   constructor(x, y, angle, owner) {
@@ -18,7 +20,6 @@ export class Bullet {
     this.height = 0;
     this.loadImage();
     this.owner = owner;
-
     this.isColliding = false;
     this.collider = new RectCollider(
       x,
@@ -42,7 +43,6 @@ export class Bullet {
     this.x += this.speed * Math.cos(this.angle) * window.dt / 1000;
     this.y += this.speed * Math.sin(this.angle) * window.dt / 1000;
     this.collider.updatePosition(this.x, this.y);
-    // console.log(this.x);
   }
 
   draw(context) {
@@ -72,11 +72,14 @@ export class Bullet {
   onCollision(otherCollider) {
     // console.log(otherCollider.owner.type);
     // console.log(this.owner);
-    if (otherCollider.owner instanceof Enemy) {
+    if (otherCollider.owner instanceof Enemy && this.owner instanceof Player) {
       this.isColliding = true;
       CollisionManager.instance.removeCollider(this.collider);
       // console.log("enemy bị bắn");
     } else if (otherCollider.owner instanceof Box){
+      this.isColliding = true;
+      CollisionManager.instance.removeCollider(this.collider);
+    } else if (otherCollider.owner instanceof Player && this.owner instanceof Boss){
       this.isColliding = true;
       CollisionManager.instance.removeCollider(this.collider);
     }

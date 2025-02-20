@@ -5,6 +5,8 @@ import { CollisionManager } from "../handle/CollisionManager.js";
 import { Box } from "./Box.js";
 import { Enemy } from "./Enemy.js";
 import { AudioManager } from "../handle/AudioManager.js";
+import { GameManager } from "../handle/GameManager.js";
+import { Boss } from "./Boss.js";
 export class Player {
   constructor(x, y) {
     this.x = x;
@@ -126,6 +128,9 @@ export class Player {
     } else if (this.y + this.height > canvas.height - 50) {
       this.y = canvas.height - this.height - 50;
     }
+    if (this.health <= 0) {
+      GameManager.instance.setState("gameover");
+    }
   }
 
   draw(context) {
@@ -193,6 +198,11 @@ export class Player {
       this.health -= otherCollider.owner.damage;
       AudioManager.instance.loadSound("shoot", "../asset/audio/shoot.mp3");
       AudioManager.instance.playSound("player_hurt");
+    } else if (
+      otherCollider.owner instanceof Bullet &&
+      otherCollider.owner.owner instanceof Boss
+    ) {
+      this.health -= otherCollider.owner.damage;
     }
   }
 }

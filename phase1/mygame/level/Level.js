@@ -1,31 +1,42 @@
-import {BoxManager} from "../manager/box_manager.js";
+import { BoxManager } from "../manager/box_manager.js";
 import { EnemyManager } from "../manager/enemy_manager.js";
 import { Player } from "../object/Player.js";
 import { LevelManager } from "./LevelManager.js";
+import {Boss} from "../object/Boss.js"
 export class Level {
+  static playerInstance = null;
   constructor() {
     this.isLoaded = false;
     this.isPaused = false;
-    this.player = null;
+    this.boss = null;
   }
 
-  init(data,player) {
-    this.player = player;
+  init(data) {
+    if (!Level.playerInstance) { 
+      Level.playerInstance = new Player(data.player.x, data.player.y); 
+    } else {
+      Level.playerInstance.x = data.player.x;
+      Level.playerInstance.y = data.player.y;
+    }
+    this.boss = new Boss(500,200);
     BoxManager.instance.initMap(data.boxes);
-    EnemyManager.instance.init(data.enemies,3,3000);
+    EnemyManager.instance.init(data.enemies, 3, 3000);
   }
 
   draw(context) {
     BoxManager.instance.draw(context);
+    this.boss.draw(context);
     EnemyManager.instance.draw(context);
-    this.player.draw(context);
-    this.player.drawHUD(context);
+    Level.playerInstance.draw(context);
+    Level.playerInstance.drawHUD(context);
   }
+
   update(inputController) {
-    EnemyManager.instance.update(this.player.x,this.player.y);
-    this.player.update(inputController);
     BoxManager.instance.update();
-    if(EnemyManager.instance.checkClearEnemies()){
+    this.boss.update()
+    EnemyManager.instance.update(Level.playerInstance.x, Level.playerInstance.y);
+    Level.playerInstance.update(inputController);
+    if (EnemyManager.instance.checkClearEnemies()) {
       this.onWon();
     }
   }

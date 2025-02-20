@@ -1,8 +1,11 @@
+import { Level } from "../level/Level.js";
+import { LevelManager } from "../level/LevelManager.js";
+import { BoxManager } from "../manager/box_manager.js";
+import { EnemyManager } from "../manager/enemy_manager.js";
+
 export class GameManager {
     static instance = null;
     constructor() {
-      this.score = 0;
-      this.live = 3;
       this.state = "playing";
       GameManager.instance = this;
     }
@@ -11,14 +14,17 @@ export class GameManager {
       this.state = newState;
     }
   
-    updateScore(point) {
-      this.score += point;
-    }
+    // updateScore(point) {
+    //   this.score += point;
+    // }
   
     resetGame() {
-      this.score = 0;
-      this.live =3;
       this.state = "playing";
+      LevelManager.instance.currentLevelId =1;
+      EnemyManager.instance.enemies = [];
+      BoxManager.instance.boxs =[];
+      LevelManager.instance.startLevel();
+      Level.playerInstance =null;
     }
   }
   

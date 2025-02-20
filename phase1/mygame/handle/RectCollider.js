@@ -8,9 +8,6 @@ export class RectCollider extends Collider {
   }
 
   checkCollision(other) {
-    // console.log("start");
-    // console.log(other.owner);
-    
     if (other instanceof RectCollider) {
       return (
         this.x < other.x + other.width &&
