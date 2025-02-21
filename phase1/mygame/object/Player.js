@@ -93,30 +93,15 @@ export class Player {
     if (inputController.getMouseClick()) {
       this.shoot();
     }
-    let hitList = [];
-    this.bullets.forEach((bullet, index) => {
+    this.bullets = this.bullets.filter(bullet => {
       bullet.update();
-      if (bullet.isColliding) {
-        hitList.push(bullet);
-      }
-
-      if (
-        bullet.x < 0 ||
-        bullet.x > canvas.width ||
-        bullet.y < 0 ||
-        bullet.y > canvas.height
-      ) {
-        this.bullets.splice(index, 1);
-      }
+      return !bullet.isColliding &&
+             bullet.x >= 0 &&
+             bullet.x <= canvas.width &&
+             bullet.y >= 0 &&
+             bullet.y <= canvas.height;
     });
 
-    if (hitList.length > 0) {
-      hitList.forEach((bullet, bulletIndex) => {
-        this.bullets.splice(bulletIndex, 1);
-      });
-    }
-
-    //gioi han pham vi player
     if (this.x < 20) {
       this.x = 20;
     } else if (this.x + this.width > canvas.width - 20) {
@@ -144,10 +129,6 @@ export class Player {
       this.height
     );
     this.rotate.resetRotation(context);
-    context.beginPath();
-    context.rect(this.x, this.y, this.width, this.height);
-    context.stroke();
-    context.closePath();
 
     this.bullets.forEach((bullet) => {
       bullet.draw(context);

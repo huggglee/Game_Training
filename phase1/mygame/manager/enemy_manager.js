@@ -1,6 +1,6 @@
 import { Enemy } from "../object/Enemy.js";
 import { CollisionManager } from "../handle/CollisionManager.js";
-
+import { Boss } from "../object/Boss.js";
 export class EnemyManager {
   static instance = null;
 
@@ -10,7 +10,7 @@ export class EnemyManager {
     this.waves = [];
     this.currentWave = 0;
     this.isSpawnComplete = false;
-    this.waveInterval = null; 
+    this.waveInterval = null;
     EnemyManager.instance = this;
   }
 
@@ -33,16 +33,17 @@ export class EnemyManager {
   startWaves() {
     if (this.currentWave >= this.waves.length) {
       this.isSpawnComplete = true;
-      clearInterval(this.waveInterval); 
+      clearInterval(this.waveInterval);
       return;
     }
     this.waves[this.currentWave].forEach((enemyData) => {
-      this.spawnEnemy(enemyData.x, enemyData.y);
+      this.spawnEnemy(enemyData);
     });
     this.currentWave++;
   }
 
   update(playerX, playerY) {
+    // console.log(this.enemies);
     this.enemies.forEach((enemy) => {
       enemy.changeTarget(playerX, playerY);
       enemy.update();
@@ -51,15 +52,20 @@ export class EnemyManager {
     this.enemies = this.enemies.filter((enemy) => enemy.isAlive);
   }
 
-  spawnEnemy(x, y) {
-    let enemy = new Enemy(x, y);
-    this.enemies.push(enemy);
-  }
-
   draw(context) {
     this.enemies.forEach((enemy) => {
       enemy.draw(context);
     });
+  }
+
+  spawnEnemy(enemyData) {
+    let enemy;
+    if (enemyData.isBoss) {
+      enemy = new Boss(enemyData.x, enemyData.y);
+    } else {
+      enemy = new Enemy(enemyData.x, enemyData.y);
+    }
+    this.enemies.push(enemy);
   }
 
   checkClearEnemies() {

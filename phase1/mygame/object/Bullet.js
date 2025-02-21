@@ -60,11 +60,11 @@ export class Bullet {
       this.width,
       this.height
     );
-    context.beginPath();
-    context.rect(-this.width / 2, -this.height / 2, this.width, this.height);
-    context.strokeStyle = "red";
-    context.stroke();
-    context.closePath();
+    // context.beginPath();
+    // context.rect(-this.width / 2, -this.height / 2, this.width, this.height);
+    // context.strokeStyle = "red";
+    // context.stroke();
+    // context.closePath();
 
     this.rotate.resetRotation(context);
   }

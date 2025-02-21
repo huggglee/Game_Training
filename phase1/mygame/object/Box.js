@@ -31,10 +31,10 @@ export class Box {
   draw(context) {
     if (this.isExist) {
       context.drawImage(this.img, this.x, this.y, this.width, this.height);
-      context.beginPath();
-      context.rect(this.x, this.y, this.width, this.height);
-      context.stroke();
-      context.closePath();
+      // context.beginPath();
+      // context.rect(this.x, this.y, this.width, this.height);
+      // context.stroke();
+      // context.closePath();
     }
   }
 

@@ -15,7 +15,8 @@ export class Enemy {
     this.angle = 0;
     this.health = 50;
     this.damage = 10;
-    this.range = 400;
+    this.range = 500;
+    this.type = "enemy";
     this.isAlive = true;
     this.img = new Image();
     this.imgIndex = 1;
@@ -42,10 +43,10 @@ export class Enemy {
   draw(context) {
     if (this.isAlive) {
       context.drawImage(this.img, this.x, this.y, this.width, this.height);
-      context.beginPath();
-      context.rect(this.x, this.y, this.width, this.height);
-      context.stroke();
-      context.closePath();
+      // context.beginPath();
+      // context.rect(this.x, this.y, this.width, this.height);
+      // context.stroke();
+      // context.closePath();
       this.drawHUD(context);
     }
   }

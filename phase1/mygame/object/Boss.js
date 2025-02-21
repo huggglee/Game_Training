@@ -1,5 +1,6 @@
 import { CollisionManager } from "../handle/CollisionManager.js";
 import { RectCollider } from "../handle/RectCollider.js";
+import { EnemyManager } from "../manager/enemy_manager.js";
 import { Bullet } from "./Bullet.js";
 import { Enemy } from "./Enemy.js";
 import { Player } from "./Player.js";
@@ -7,7 +8,7 @@ import { Player } from "./Player.js";
 export class Boss extends Enemy {
   constructor(x, y) {
     super(x, y);
-    this.health = 200;
+    this.health = 300;
     this.isAlive = true;
     this.isColliding = false;
     this.img = new Image();
@@ -19,11 +20,13 @@ export class Boss extends Enemy {
       this.onCollision.bind(this),
       this
     );
+    this.quantityBullet = 10;
+    this.hasSpawnedEnemies = false
     CollisionManager.instance.addCollider(this.collider);
     this.loadImage();
     this.shootInterval = setInterval(() => {
       if (this.isAlive) {
-        this.shoot();
+        this.shoot(this.quantityBullet);
       }
     }, 2000);
     this.bullets = [];
@@ -43,10 +46,10 @@ export class Boss extends Enemy {
   draw(context) {
     if (this.isAlive) {
       context.drawImage(this.img, this.x, this.y, this.width, this.height);
-      context.beginPath();
-      context.rect(this.x, this.y, this.width, this.height);
-      context.stroke();
-      context.closePath();
+      // context.beginPath();
+      // context.rect(this.x, this.y, this.width, this.height);
+      // context.stroke();
+      // context.closePath();
       this.drawHUD(context);
       this.bullets.forEach((bullet) => {
         bullet.draw(context);
@@ -55,29 +58,62 @@ export class Boss extends Enemy {
   }
   drawHUD(context) {
     context.fillStyle = "red";
-    context.fillRect(this.x, this.y - 10, (this.health / 200) * 160, 5);
+    context.fillRect(this.x, this.y - 10, (this.health / 300) * 160, 5);
   }
 
   update() {
-    this.bullets.forEach((bullet) => {
+    if (this.health < 150 && this.health >= 100) {
+      console.log("av");
+      this.quantityBullet = 15;
+    } else if (this.health < 100 && !this.hasSpawnedEnemies) {
+      this.quantityBullet = 20;
+      this.spawnEnemy(6);
+      this.hasSpawnedEnemies = true;
+    }
+
+    if (this.health <=0){
+      this.isAlive = false;
+      CollisionManager.instance.removeCollider(this.collider);
+    }
+    this.bullets = this.bullets.filter(bullet => {
       bullet.update();
+      return !bullet.isColliding &&
+             bullet.x >= 0 &&
+             bullet.x <= canvas.width &&
+             bullet.y >= 0 &&
+             bullet.y <= canvas.height;
     });
   }
   //skill
-  shoot() {
-    for (let i = 0; i < 10; i++) {
+  shoot(quantity) {
+    for (let i = 0; i < quantity; i++) {
       this.bullets.push(
         new Bullet(
           this.x + this.width / 2,
           this.y + this.height / 2,
-          (i * Math.PI) / 5,
+          (i * 2 * Math.PI) / quantity,
           this
         )
       );
     }
   }
 
-  spawnEnemy() {}
+  spawnEnemy(quantity) {
+    for (let i = 0; i < quantity; i++) {
+      let offsetX = this.getRandomOffset();
+      let offsetY = this.getRandomOffset();
+      let enemyData = {
+        x: this.x + this.width / 2 + offsetX,
+        y: this.y + this.height / 2 + offsetY,
+      };
+      EnemyManager.instance.spawnEnemy(enemyData);
+    }
+  }
+  getRandomOffset() {
+    return Math.random() < 0.5
+      ? -200 + Math.random() * 100 
+      : 200 + Math.random() * 100; 
+  }
 
   onCollision(otherCollider) {
     if (

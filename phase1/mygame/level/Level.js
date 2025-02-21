@@ -18,14 +18,14 @@ export class Level {
       Level.playerInstance.x = data.player.x;
       Level.playerInstance.y = data.player.y;
     }
-    this.boss = new Boss(500,200);
+    // this.boss = new Boss(500,200);
     BoxManager.instance.initMap(data.boxes);
     EnemyManager.instance.init(data.enemies, 3, 3000);
   }
 
   draw(context) {
     BoxManager.instance.draw(context);
-    this.boss.draw(context);
+    // this.boss.draw(context);
     EnemyManager.instance.draw(context);
     Level.playerInstance.draw(context);
     Level.playerInstance.drawHUD(context);
@@ -33,7 +33,7 @@ export class Level {
 
   update(inputController) {
     BoxManager.instance.update();
-    this.boss.update()
+    // this.boss.update()
     EnemyManager.instance.update(Level.playerInstance.x, Level.playerInstance.y);
     Level.playerInstance.update(inputController);
     if (EnemyManager.instance.checkClearEnemies()) {
