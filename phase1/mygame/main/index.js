@@ -30,7 +30,6 @@ window.dt = 0;
 let lastTime = performance.now();
 async function init() {
   initComp();
-  //data
   initSound();
   levelMng.startLevel();
 
@@ -65,8 +64,7 @@ async function init() {
   retryButton.addEventListener("click", () => {
     location.reload();
   });
-
-  // initComp();
+  
   window.requestAnimationFrame(loop);
 }
 
@@ -112,7 +110,7 @@ function initComp() {
 }
 
 function initSound() {
-  AudioManager.instance.loadSound("shoot", "../asset/audio/shoot.mp3");
+  AudioManager.instance.loadSound("shoot2", "../asset/audio/shoot2.mp3");
   AudioManager.instance.loadSound(
     "slime_death",
     "../asset/audio/slime_death.mp3"

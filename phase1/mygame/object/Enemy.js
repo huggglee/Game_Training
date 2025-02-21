@@ -11,7 +11,7 @@ export class Enemy {
     this.y = y;
     this.targetX = x;
     this.targetY = y;
-    this.speed = 3;
+    this.speed = 2;
     this.angle = 0;
     this.health = 50;
     this.damage = 10;
@@ -36,17 +36,11 @@ export class Enemy {
       this
     );
     CollisionManager.instance.addCollider(this.collider);
-
-    // this.bullets = [];
   }
 
   draw(context) {
     if (this.isAlive) {
       context.drawImage(this.img, this.x, this.y, this.width, this.height);
-      // context.beginPath();
-      // context.rect(this.x, this.y, this.width, this.height);
-      // context.stroke();
-      // context.closePath();
       this.drawHUD(context);
     }
   }
@@ -79,8 +73,6 @@ export class Enemy {
       );
       if (distance < this.range) {
         this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
-        // console.log(this.width);
-        // console.log(this.height);
         this.x += this.speed * Math.cos(this.angle);
         this.y += this.speed * Math.sin(this.angle);
         this.collider.updatePosition(this.x, this.y);
@@ -99,7 +91,6 @@ export class Enemy {
       otherCollider.owner.owner instanceof Player
     ) {
       this.health -= otherCollider.owner.damage;
-      console.log("enemy bi bắn");
     } else if (otherCollider.owner instanceof Player) {
       this.isAlive = false;
       CollisionManager.instance.removeCollider(this.collider);

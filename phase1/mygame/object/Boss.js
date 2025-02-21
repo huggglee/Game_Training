@@ -20,6 +20,7 @@ export class Boss extends Enemy {
       this.onCollision.bind(this),
       this
     );
+    this.imgIndex = 1;
     this.quantityBullet = 10;
     this.hasSpawnedEnemies = false
     CollisionManager.instance.addCollider(this.collider);
@@ -28,21 +29,28 @@ export class Boss extends Enemy {
       if (this.isAlive) {
         this.shoot(this.quantityBullet);
       }
-    }, 2000);
+    }, 2500);
+    setInterval(() => {
+      let temp = (this.imgIndex % 6) + 1;
+      this.changeIndex(temp);
+    }, 500);
     this.bullets = [];
   }
 
   loadImage() {
     this.img.onload = () => {
-      this.width = this.img.width / 10;
-      this.height = this.img.height / 10;
+      this.width = this.img.width *5;
+      this.height = this.img.height *5;
       this.collider.width = this.width;
       this.collider.height = this.height;
       // console.log(this.width)
     };
-    this.img.src = `../asset/img/boss/boss.png`;
+    this.img.src = `../asset/img/boss/boss_${this.imgIndex}.png`;
   }
-
+  changeIndex(index) {
+    this.imgIndex = index;
+    this.loadImage();
+  }
   draw(context) {
     if (this.isAlive) {
       context.drawImage(this.img, this.x, this.y, this.width, this.height);
@@ -58,7 +66,7 @@ export class Boss extends Enemy {
   }
   drawHUD(context) {
     context.fillStyle = "red";
-    context.fillRect(this.x, this.y - 10, (this.health / 300) * 160, 5);
+    context.fillRect(this.x, this.y - 10, (this.health / 300) * 200, 5);
   }
 
   update() {

@@ -11,7 +11,7 @@ export class Player {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.speed = 4;
+    this.speed = 3;
     this.angle = 0;
     this.health = 100;
     this.state = "alive";
@@ -52,7 +52,7 @@ export class Player {
     const bulletY = this.y + this.height / 2;
     const bullet = new Bullet(bulletX, bulletY, this.angle, this);
     this.bullets.push(bullet);
-    AudioManager.instance.playSound("shoot");
+    AudioManager.instance.playSound("shoot2");
   }
 
   removeBullet(bullet) {
@@ -177,7 +177,6 @@ export class Player {
       }
     } else if (otherCollider.owner instanceof Enemy) {
       this.health -= otherCollider.owner.damage;
-      AudioManager.instance.loadSound("shoot", "../asset/audio/shoot.mp3");
       AudioManager.instance.playSound("player_hurt");
     } else if (
       otherCollider.owner instanceof Bullet &&

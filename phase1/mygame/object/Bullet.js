@@ -14,11 +14,9 @@ export class Bullet {
     this.context = null;
     this.img = new Image();
     this.damage = 10;
-    this.img.src = "../asset/img/bullet/bullet_1.png";
     this.angle = angle;
     this.width = 0;
     this.height = 0;
-    this.loadImage();
     this.owner = owner;
     this.isColliding = false;
     this.collider = new RectCollider(
@@ -30,14 +28,23 @@ export class Bullet {
       this
     );
     CollisionManager.instance.addCollider(this.collider);
+    this.loadImage();
     this.rotate = new Rotate();
   }
 
   loadImage() {
+    console.log(this.owner);
+    if(this.owner instanceof Player){
+      this.img.src = "../asset/img/bullet/bullet_1.png";
+    } else if (this.owner instanceof Boss){
+      this.img.src = "../asset/img/bullet/bullet_2.png";
+    }
     this.img.onload = () => {
       this.width = this.img.width / 6;
       this.height = this.img.height / 6;
     };
+    
+
   }
   update() {
     this.x += this.speed * Math.cos(this.angle) * window.dt / 1000;
