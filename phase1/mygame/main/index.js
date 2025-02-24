@@ -80,6 +80,7 @@ function initSound() {
   audioManager.loadSound("player_hurt", "../asset/audio/player_hurt.mp3");
   audioManager.loadSound("victory", "../asset/audio/victory.mp3");
   audioManager.loadSound("gameover", "../asset/audio/fail.mp3");
+  audioManager.loadSound("level_up", "../asset/audio/level_up.mp3");
 }
 
 function initEvent() {

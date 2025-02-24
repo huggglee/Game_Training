@@ -1,3 +1,4 @@
+import { AudioManager } from "../handle/AudioManager.js";
 import { GameManager } from "../handle/GameManager.js";
 import { Player } from "../object/Player.js";
 import { Level } from "./Level.js";
@@ -35,6 +36,7 @@ export class LevelManager {
   loadNextLevel() {
     console.log(this.currentLevelId);
     if (this.currentLevelId < 3) {
+      AudioManager.instance.playSound("level_up");
       this.currentLevelId++;
       this.loadLevel();
     } else {
