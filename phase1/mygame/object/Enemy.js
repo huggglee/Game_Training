@@ -11,7 +11,7 @@ export class Enemy {
     this.y = y;
     this.targetX = x;
     this.targetY = y;
-    this.speed = 2;
+    this.speed = 150;
     this.angle = 0;
     this.health = 50;
     this.damage = 10;
@@ -38,13 +38,6 @@ export class Enemy {
     CollisionManager.instance.addCollider(this.collider);
   }
 
-  draw(context) {
-    if (this.isAlive) {
-      context.drawImage(this.img, this.x, this.y, this.width, this.height);
-      this.drawHUD(context);
-    }
-  }
-
   loadImage() {
     this.img.onload = () => {
       this.width = this.img.width * 3;
@@ -67,19 +60,40 @@ export class Enemy {
       CollisionManager.instance.removeCollider(this.collider);
     }
     if (this.isAlive) {
+      if (this.x < 20) {
+        this.x = 20;
+      } else if (this.x + this.width > canvas.width - 20) {
+        this.x = canvas.width - this.width - 20;
+      }
+
+      if (this.y < 50) {
+        this.y = 50;
+      } else if (this.y + this.height > canvas.height - 50) {
+        this.y = canvas.height - this.height - 50;
+      }
       let distance = Math.sqrt(
         (this.x - this.targetX) * (this.x - this.targetX) +
           (this.y - this.targetY) * (this.y - this.targetY)
       );
       if (distance < this.range) {
         this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
-        this.x += this.speed * Math.cos(this.angle);
-        this.y += this.speed * Math.sin(this.angle);
+        this.x += (this.speed * Math.cos(this.angle) * window.dt) / 1000;
+        this.y += (this.speed * Math.sin(this.angle) * window.dt) / 1000;
         this.collider.updatePosition(this.x, this.y);
       }
     }
   }
 
+  draw(context) {
+    if (this.isAlive) {
+      context.drawImage(this.img, this.x, this.y, this.width, this.height);
+      this.drawHUD(context);
+    }
+  }
+  drawHUD(context) {
+    context.fillStyle = "red";
+    context.fillRect(this.x, this.y, this.health, 5);
+  }
   changeTarget(targetX, targetY) {
     this.targetX = targetX;
     this.targetY = targetY;
@@ -121,38 +135,33 @@ export class Enemy {
           this.y = otherCollider.owner.y - this.height;
         }
       }
-    } else if (otherCollider.owner instanceof Enemy){
+    } else if (otherCollider.owner instanceof Enemy) {
       const dx =
-      this.x +
-      this.width / 2 -
-      (otherCollider.owner.x + otherCollider.owner.width / 2);
-    const dy =
-      this.y +
-      this.height / 2 -
-      (otherCollider.owner.y + otherCollider.owner.height / 2);
-    const absDx = Math.abs(dx);
-    const absDy = Math.abs(dy);
+        this.x +
+        this.width / 2 -
+        (otherCollider.owner.x + otherCollider.owner.width / 2);
+      const dy =
+        this.y +
+        this.height / 2 -
+        (otherCollider.owner.y + otherCollider.owner.height / 2);
+      const absDx = Math.abs(dx);
+      const absDy = Math.abs(dy);
 
-    if (absDx > absDy) {
-      // Va chạm theo trục x
-      if (dx > 0) {
-        this.x = otherCollider.owner.x + otherCollider.owner.width;
+      if (absDx > absDy) {
+        // Va chạm theo trục x
+        if (dx > 0) {
+          this.x = otherCollider.owner.x + otherCollider.owner.width;
+        } else {
+          this.x = otherCollider.owner.x - this.width;
+        }
       } else {
-        this.x = otherCollider.owner.x - this.width;
-      }
-    } else {
-      // Va chạm theo trục y
-      if (dy > 0) {
-        this.y = otherCollider.owner.y + otherCollider.owner.height;
-      } else {
-        this.y = otherCollider.owner.y - this.height;
+        // Va chạm theo trục y
+        if (dy > 0) {
+          this.y = otherCollider.owner.y + otherCollider.owner.height;
+        } else {
+          this.y = otherCollider.owner.y - this.height;
+        }
       }
     }
-    }
-  }
-
-  drawHUD(context) {
-    context.fillStyle = "red";
-    context.fillRect(this.x, this.y, this.health, 5);
   }
 }

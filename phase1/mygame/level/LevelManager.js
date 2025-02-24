@@ -38,7 +38,7 @@ export class LevelManager {
       this.currentLevelId++;
       this.loadLevel();
     } else {
-      GameManager.instance.setState("win");
+      GameManager.instance.setState("victory");
     }
   }
 }

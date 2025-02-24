@@ -10,7 +10,7 @@ export class Bullet {
   constructor(x, y, angle, owner) {
     this.x = x;
     this.y = y;
-    this.speed = 400;
+    this.speed = 350;
     // this.context = null;
     this.img = new Image();
     this.damage = 10;

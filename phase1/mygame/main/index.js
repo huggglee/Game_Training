@@ -34,6 +34,9 @@ async function init() {
   initSound();
   initEvent();
   levelMng.startLevel();
+  // setTimeout(()=>{
+  //   gameManager.setState("victory")
+  // },3000);
   window.requestAnimationFrame(loop);
 }
 
@@ -48,8 +51,10 @@ function loop() {
     lastTime = now;
   } else if (gameManager.state === "gameover") {
     gameOverScreen.classList.toggle("show");
+    audioManager.playSound("gameover");
     return;
-  } else if (gameManager.state === "win") {
+  } else if (gameManager.state === "victory") {
+    audioManager.playSound("victory");
     winScreen.classList.toggle("show");
     return;
   }
@@ -73,6 +78,8 @@ function initSound() {
   audioManager.loadSound("shoot2", "../asset/audio/shoot2.mp3");
   audioManager.loadSound("slime_death", "../asset/audio/slime_death.mp3");
   audioManager.loadSound("player_hurt", "../asset/audio/player_hurt.mp3");
+  audioManager.loadSound("victory", "../asset/audio/victory.mp3");
+  audioManager.loadSound("gameover", "../asset/audio/fail.mp3");
 }
 
 function initEvent() {

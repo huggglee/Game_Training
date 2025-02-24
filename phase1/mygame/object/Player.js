@@ -11,7 +11,7 @@ export class Player {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.speed = 3;
+    this.speed = 200;
     this.angle = 0;
     this.health = 100;
     this.state = "alive";
@@ -55,16 +55,16 @@ export class Player {
 
   move(inputController) {
     if (inputController.isKeyPressed("a")) {
-      this.x -= this.speed;
+      this.x -= this.speed*window.dt/1000;
     }
     if (inputController.isKeyPressed("d")) {
-      this.x += this.speed;
+      this.x += this.speed*window.dt/1000;
     }
     if (inputController.isKeyPressed("w")) {
-      this.y -= this.speed;
+      this.y -= this.speed*window.dt/1000;
     }
     if (inputController.isKeyPressed("s")) {
-      this.y += this.speed;
+      this.y += this.speed*window.dt/1000;
     }
     this.collider.updatePosition(this.x, this.y);
 
