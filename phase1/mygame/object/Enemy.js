@@ -121,6 +121,33 @@ export class Enemy {
           this.y = otherCollider.owner.y - this.height;
         }
       }
+    } else if (otherCollider.owner instanceof Enemy){
+      const dx =
+      this.x +
+      this.width / 2 -
+      (otherCollider.owner.x + otherCollider.owner.width / 2);
+    const dy =
+      this.y +
+      this.height / 2 -
+      (otherCollider.owner.y + otherCollider.owner.height / 2);
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+
+    if (absDx > absDy) {
+      // Va chạm theo trục x
+      if (dx > 0) {
+        this.x = otherCollider.owner.x + otherCollider.owner.width;
+      } else {
+        this.x = otherCollider.owner.x - this.width;
+      }
+    } else {
+      // Va chạm theo trục y
+      if (dy > 0) {
+        this.y = otherCollider.owner.y + otherCollider.owner.height;
+      } else {
+        this.y = otherCollider.owner.y - this.height;
+      }
+    }
     }
   }
 

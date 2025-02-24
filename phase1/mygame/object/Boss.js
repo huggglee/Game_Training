@@ -8,7 +8,7 @@ import { Player } from "./Player.js";
 export class Boss extends Enemy {
   constructor(x, y) {
     super(x, y);
-    this.health = 300;
+    this.health = 400;
     this.isAlive = true;
     this.isColliding = false;
     this.img = new Image();
@@ -22,7 +22,7 @@ export class Boss extends Enemy {
     );
     this.imgIndex = 1;
     this.quantityBullet = 10;
-    this.hasSpawnedEnemies = false
+    this.hasSpawnedEnemies = false;
     CollisionManager.instance.addCollider(this.collider);
     this.loadImage();
     this.shootInterval = setInterval(() => {
@@ -39,13 +39,13 @@ export class Boss extends Enemy {
 
   loadImage() {
     this.img.onload = () => {
-      this.width = this.img.width *5;
-      this.height = this.img.height *5;
+      this.width = this.img.width * 5;
+      this.height = this.img.height * 5;
       this.collider.width = this.width;
       this.collider.height = this.height;
       // console.log(this.width)
     };
-    this.img.src = `../asset/img/boss/boss_${this.imgIndex}.png`;
+    this.img.src = `../asset/img/boss/a${this.imgIndex}.png`;
   }
   changeIndex(index) {
     this.imgIndex = index;
@@ -54,10 +54,6 @@ export class Boss extends Enemy {
   draw(context) {
     if (this.isAlive) {
       context.drawImage(this.img, this.x, this.y, this.width, this.height);
-      // context.beginPath();
-      // context.rect(this.x, this.y, this.width, this.height);
-      // context.stroke();
-      // context.closePath();
       this.drawHUD(context);
       this.bullets.forEach((bullet) => {
         bullet.draw(context);
@@ -66,31 +62,26 @@ export class Boss extends Enemy {
   }
   drawHUD(context) {
     context.fillStyle = "red";
-    context.fillRect(this.x, this.y - 10, (this.health / 300) * 200, 5);
+    context.fillRect(this.x, this.y - 10, (this.health / 400) * 150, 5);
   }
 
   update() {
-    if (this.health < 150 && this.health >= 100) {
-      console.log("av");
+    if (this.health < 250 && this.health >= 150) {
       this.quantityBullet = 15;
-    } else if (this.health < 100 && !this.hasSpawnedEnemies) {
+    } else if (this.health < 150 && !this.hasSpawnedEnemies) {
       this.quantityBullet = 20;
       this.spawnEnemy(6);
       this.hasSpawnedEnemies = true;
     }
 
-    if (this.health <=0){
+    if (this.health <= 0) {
       this.isAlive = false;
       CollisionManager.instance.removeCollider(this.collider);
     }
-    this.bullets = this.bullets.filter(bullet => {
+    this.bullets.forEach((bullet) => {
       bullet.update();
-      return !bullet.isColliding &&
-             bullet.x >= 0 &&
-             bullet.x <= canvas.width &&
-             bullet.y >= 0 &&
-             bullet.y <= canvas.height;
     });
+    this.bullets = this.bullets.filter((bullet) => !bullet.isColliding);
   }
   //skill
   shoot(quantity) {
@@ -119,8 +110,8 @@ export class Boss extends Enemy {
   }
   getRandomOffset() {
     return Math.random() < 0.5
-      ? -200 + Math.random() * 100 
-      : 200 + Math.random() * 100; 
+      ? -150 + Math.random() * 50 // Giá trị từ -150 đến -100 (luôn < -75)
+      : 100 + Math.random() * 50; // Giá trị từ 100 đến 150 (luôn > 75)
   }
 
   onCollision(otherCollider) {

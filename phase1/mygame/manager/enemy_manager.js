@@ -48,8 +48,8 @@ export class EnemyManager {
       enemy.changeTarget(playerX, playerY);
       enemy.update();
     });
-
     this.enemies = this.enemies.filter((enemy) => enemy.isAlive);
+
   }
 
   draw(context) {

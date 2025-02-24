@@ -11,7 +11,7 @@ export class Bullet {
     this.x = x;
     this.y = y;
     this.speed = 400;
-    this.context = null;
+    // this.context = null;
     this.img = new Image();
     this.damage = 10;
     this.angle = angle;
@@ -33,7 +33,6 @@ export class Bullet {
   }
 
   loadImage() {
-    console.log(this.owner);
     if(this.owner instanceof Player){
       this.img.src = "../asset/img/bullet/bullet_1.png";
     } else if (this.owner instanceof Boss){
@@ -50,14 +49,21 @@ export class Bullet {
     this.x += this.speed * Math.cos(this.angle) * window.dt / 1000;
     this.y += this.speed * Math.sin(this.angle) * window.dt / 1000;
     this.collider.updatePosition(this.x, this.y);
+  
+    // Kiểm tra xem viên đạn có rời khỏi màn hình không
+    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+      this.isColliding = true;
+      CollisionManager.instance.removeCollider(this.collider);
+    }
   }
+  
 
   draw(context) {
-    this.context = context;
+    context.save();
     this.rotate.setRotation(
       this.angle,
-      this.x + this.width / 2,
-      this.y + this.height / 2
+      this.x ,
+      this.y
     );
     this.rotate.applyRotation(context);
     context.drawImage(

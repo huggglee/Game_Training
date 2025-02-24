@@ -1,15 +1,16 @@
+import { GameManager } from "../handle/GameManager.js";
 import { Player } from "../object/Player.js";
 import { Level } from "./Level.js";
 import { LevelLoader } from "./LevelLoader.js";
 
 export class LevelManager {
-  static instance =null;
+  static instance = null;
   constructor() {
     this.currentLevel = null;
     this.levelLoader = new LevelLoader();
-    this.currentLevelId=1;
+    this.currentLevelId = 1;
     this.player = null;
-    LevelManager.instance = this
+    LevelManager.instance = this;
   }
   async loadLevel() {
     console.log(this.currentLevelId);
@@ -26,13 +27,18 @@ export class LevelManager {
     // Cleanup resources
     this.currentLevel = null;
   }
-  
-  startLevel(){
+
+  startLevel() {
     this.loadLevel();
   }
 
-  loadNextLevel(){
-    this.currentLevelId++;
-    this.loadLevel();
+  loadNextLevel() {
+    console.log(this.currentLevelId);
+    if (this.currentLevelId < 3) {
+      this.currentLevelId++;
+      this.loadLevel();
+    } else {
+      GameManager.instance.setState("win");
+    }
   }
 }

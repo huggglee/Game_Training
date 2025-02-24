@@ -16,15 +16,11 @@ export class Player {
     this.health = 100;
     this.state = "alive";
     this.img = new Image();
-    this.loadImage();
     this.rotate = new Rotate();
     this.bullets = [];
     this.mouseX = 0;
     this.mouseY = 0;
-    this.img.src = "../asset/img/player/x1.png";
-    this.width = this.img.width / 3;
-    this.height = this.img.height / 3;
-
+    this.loadImage();
     this.isColliding = false;
     this.collider = new RectCollider(
       x,
@@ -44,17 +40,14 @@ export class Player {
   }
 
   loadImage() {
-    this.img.onload = () => {};
+    this.img.onload = () => {
+      this.width = this.img.width / 3;
+      this.height = this.img.height / 3;
+      this.collider.width = this.width;
+      this.collider.height = this.height;
+    };
+    this.img.src = "../asset/img/player/x1.png";
   }
-
-  shoot() {
-    const bulletX = this.x + this.width / 2;
-    const bulletY = this.y + this.height / 2;
-    const bullet = new Bullet(bulletX, bulletY, this.angle, this);
-    this.bullets.push(bullet);
-    AudioManager.instance.playSound("shoot2");
-  }
-
   removeBullet(bullet) {
     const index = this.bullets.indexOf(bullet);
     this.bullets.splice(index, 1);
@@ -93,14 +86,10 @@ export class Player {
     if (inputController.getMouseClick()) {
       this.shoot();
     }
-    this.bullets = this.bullets.filter(bullet => {
+    this.bullets.forEach((bullet) => {
       bullet.update();
-      return !bullet.isColliding &&
-             bullet.x >= 0 &&
-             bullet.x <= canvas.width &&
-             bullet.y >= 0 &&
-             bullet.y <= canvas.height;
     });
+    this.bullets = this.bullets.filter((bullet) => !bullet.isColliding);
 
     if (this.x < 20) {
       this.x = 20;
@@ -133,6 +122,21 @@ export class Player {
     this.bullets.forEach((bullet) => {
       bullet.draw(context);
     });
+
+    context.restore();
+  }
+
+  shoot() {
+    console.log(this.angle);
+    const offset = -10;
+    const offsetX = Math.sin(this.angle) * offset; // Vuông góc với hướng nhìn
+    const offsetY = -Math.cos(this.angle) * offset; // Vuông góc với hướng nhìn
+
+    const bulletX = this.x + this.width / 2 + offsetX;
+    const bulletY = this.y + this.height / 2 + offsetY;
+    const bullet = new Bullet(bulletX, bulletY, this.angle, this);
+    this.bullets.push(bullet);
+    AudioManager.instance.playSound("shoot2");
   }
   drawHUD(context) {
     context.fillStyle = "black";
