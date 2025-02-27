@@ -1,11 +1,11 @@
 import { RectCollider } from "../handle/RectCollider.js";
 import { Rotate } from "../handle/Rotate.js";
 import { Bullet } from "./Bullet.js";
-import { CollisionManager } from "../handle/CollisionManager.js";
+import { CollisionManager } from "../manager/collision_manager.js";
 import { Box } from "./Box.js";
 import { Enemy } from "./Enemy.js";
-import { AudioManager } from "../handle/AudioManager.js";
-import { GameManager } from "../handle/GameManager.js";
+import { AudioManager } from "../manager/audio_manager.js";
+import { GameManager } from "../manager/game_manager.js";
 import { Boss } from "./Boss.js";
 export class Player {
   constructor(x, y) {
@@ -81,9 +81,10 @@ export class Player {
   }
 
   update(inputController) {
+    if (GameManager.instance.state !== "playing") return;
     this.move(inputController);
 
-    if (inputController.getMouseClick()) {
+    if (inputController.getMouseClick() ) {
       this.shoot();
     }
     this.bullets.forEach((bullet) => {

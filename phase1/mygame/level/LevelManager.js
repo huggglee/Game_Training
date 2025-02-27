@@ -1,5 +1,5 @@
-import { AudioManager } from "../handle/AudioManager.js";
-import { GameManager } from "../handle/GameManager.js";
+import { AudioManager } from "../manager/audio_manager.js";
+import { GameManager } from "../manager/game_manager.js";
 import { Player } from "../object/Player.js";
 import { Level } from "./Level.js";
 import { LevelLoader } from "./LevelLoader.js";

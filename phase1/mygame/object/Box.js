@@ -1,4 +1,4 @@
-import { CollisionManager } from "../handle/CollisionManager.js";
+import { CollisionManager } from "../manager/collision_manager.js";
 import { RectCollider } from "../handle/RectCollider.js";
 import { Bullet } from "./Bullet.js";
 import { Enemy } from "./Enemy.js";

@@ -2,7 +2,6 @@ import { BoxManager } from "../manager/box_manager.js";
 import { EnemyManager } from "../manager/enemy_manager.js";
 import { Player } from "../object/Player.js";
 import { LevelManager } from "./LevelManager.js";
-import { Boss } from "../object/Boss.js";
 export class Level {
   static playerInstance = null;
   constructor() {

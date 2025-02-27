@@ -1,5 +1,5 @@
 import { Enemy } from "../object/Enemy.js";
-import { CollisionManager } from "../handle/CollisionManager.js";
+import { CollisionManager } from "./collision_manager.js";
 import { Boss } from "../object/Boss.js";
 export class EnemyManager {
   static instance = null;

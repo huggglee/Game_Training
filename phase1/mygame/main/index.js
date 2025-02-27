@@ -1,14 +1,11 @@
-import { Player } from "../object/Player.js";
 import { InputController } from "../handle/InputController.js";
-import { Bullet } from "../object/Bullet.js";
-import { Enemy } from "../object/Enemy.js";
-import { Box } from "../object/Box.js";
 import { LevelManager } from "../level/LevelManager.js";
-import { CollisionManager } from "../handle/CollisionManager.js";
-import { AudioManager } from "../handle/AudioManager.js";
+import { CollisionManager } from "../manager/collision_manager.js";
+import { AudioManager } from "../manager/audio_manager.js";
 import { BoxManager } from "../manager/box_manager.js";
 import { EnemyManager } from "../manager/enemy_manager.js";
-import { GameManager } from "../handle/GameManager.js";
+import { GameManager } from "../manager/game_manager.js";
+
 let canvas = document.getElementById("canvas");
 let context = canvas.getContext("2d");
 let gameManager = new GameManager();
@@ -35,16 +32,16 @@ async function init() {
   initEvent();
   levelMng.startLevel();
   // setTimeout(()=>{
-  //   gameManager.setState("victory")
+  //   gameManager.setState("gameover")
   // },3000);
   window.requestAnimationFrame(loop);
 }
 
 function loop() {
   if (gameManager.state === "playing") {
-    context.clearRect(0, 0, canvas.width, canvas.height);
     update();
     collisionManager.checkCollisions();
+    context.clearRect(0, 0, canvas.width, canvas.height);
     draw();
     let now = performance.now();
     window.dt = now - lastTime;
@@ -96,18 +93,24 @@ function initEvent() {
   resume_btn.addEventListener("click", () => {
     gameManager.setState("playing");
     pauseMenu.classList.toggle("show");
+    lastTime = performance.now();
   });
   restartButton.addEventListener("click", () => {
     gameManager.setState("pause");
     gameManager.resetGame();
-    gameManager.setState("playing");
     pauseMenu.classList.toggle("show");
   });
 
-  retryButton = retryButton.addEventListener("click", () => {
-    location.reload();
+  retryButton.addEventListener("click", () => {
+    console.log("retry");
+    gameManager.resetGame();
+    gameOverScreen.classList.toggle("show");
+    window.requestAnimationFrame(loop);
   });
-   playAgain.addEventListener("click", () => {
-    location.reload();
+  playAgain.addEventListener("click", () => {
+    console.log("again");
+    gameManager.resetGame();
+    winScreen.classList.toggle("show");
+    window.requestAnimationFrame(loop);
   });
 }

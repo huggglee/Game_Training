@@ -1,6 +1,6 @@
 import { Box } from "../object/Box.js";
 import { Bullet } from "../object/Bullet.js";
-import { CollisionManager } from "../handle/CollisionManager.js";
+import { CollisionManager } from "./collision_manager.js";
 
 export class BoxManager {
   static instance = null;

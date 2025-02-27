@@ -1,10 +1,11 @@
-import { CollisionManager } from "../handle/CollisionManager.js";
+import { CollisionManager } from "../manager/collision_manager.js";
 import { RectCollider } from "../handle/RectCollider.js";
 import { Rotate } from "../handle/Rotate.js";
 import { Boss } from "./Boss.js";
 import { Box } from "./Box.js";
 import { Enemy } from "./Enemy.js";
 import { Player } from "./Player.js";
+import { GameManager } from "../manager/game_manager.js";
 
 export class Bullet {
   constructor(x, y, angle, owner) {
@@ -33,38 +34,38 @@ export class Bullet {
   }
 
   loadImage() {
-    if(this.owner instanceof Player){
+    if (this.owner instanceof Player) {
       this.img.src = "../asset/img/bullet/bullet_1.png";
-    } else if (this.owner instanceof Boss){
+    } else if (this.owner instanceof Boss) {
       this.img.src = "../asset/img/bullet/bullet_2.png";
     }
     this.img.onload = () => {
       this.width = this.img.width / 6;
       this.height = this.img.height / 6;
     };
-    
-
   }
   update() {
-    this.x += this.speed * Math.cos(this.angle) * window.dt / 1000;
-    this.y += this.speed * Math.sin(this.angle) * window.dt / 1000;
+    if (GameManager.instance.state !== "playing") return;
+
+    this.x += (this.speed * Math.cos(this.angle) * window.dt) / 1000;
+    this.y += (this.speed * Math.sin(this.angle) * window.dt) / 1000;
     this.collider.updatePosition(this.x, this.y);
-  
+
     // Kiểm tra xem viên đạn có rời khỏi màn hình không
-    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+    if (
+      this.x < 0 ||
+      this.x > canvas.width ||
+      this.y < 0 ||
+      this.y > canvas.height
+    ) {
       this.isColliding = true;
       CollisionManager.instance.removeCollider(this.collider);
     }
   }
-  
 
   draw(context) {
     context.save();
-    this.rotate.setRotation(
-      this.angle,
-      this.x ,
-      this.y
-    );
+    this.rotate.setRotation(this.angle, this.x, this.y);
     this.rotate.applyRotation(context);
     context.drawImage(
       this.img,
@@ -73,12 +74,6 @@ export class Bullet {
       this.width,
       this.height
     );
-    // context.beginPath();
-    // context.rect(-this.width / 2, -this.height / 2, this.width, this.height);
-    // context.strokeStyle = "red";
-    // context.stroke();
-    // context.closePath();
-
     this.rotate.resetRotation(context);
   }
 
@@ -89,10 +84,13 @@ export class Bullet {
       this.isColliding = true;
       CollisionManager.instance.removeCollider(this.collider);
       // console.log("enemy bị bắn");
-    } else if (otherCollider.owner instanceof Box){
+    } else if (otherCollider.owner instanceof Box) {
       this.isColliding = true;
       CollisionManager.instance.removeCollider(this.collider);
-    } else if (otherCollider.owner instanceof Player && this.owner instanceof Boss){
+    } else if (
+      otherCollider.owner instanceof Player &&
+      this.owner instanceof Boss
+    ) {
       this.isColliding = true;
       CollisionManager.instance.removeCollider(this.collider);
     }

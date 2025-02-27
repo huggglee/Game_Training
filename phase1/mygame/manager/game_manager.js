@@ -1,7 +1,7 @@
 import { Level } from "../level/Level.js";
 import { LevelManager } from "../level/LevelManager.js";
-import { BoxManager } from "../manager/box_manager.js";
-import { EnemyManager } from "../manager/enemy_manager.js";
+import { BoxManager } from "./box_manager.js";
+import { EnemyManager } from "./enemy_manager.js";
 
 export class GameManager {
     static instance = null;
@@ -13,10 +13,6 @@ export class GameManager {
     setState(newState) {
       this.state = newState;
     }
-  
-    // updateScore(point) {
-    //   this.score += point;
-    // }
   
     resetGame() {
       this.state = "playing";

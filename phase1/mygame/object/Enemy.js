@@ -1,10 +1,11 @@
-import { CollisionManager } from "../handle/CollisionManager.js";
+import { CollisionManager } from "../manager/collision_manager.js";
 import { RectCollider } from "../handle/RectCollider.js";
 import { Rotate } from "../handle/Rotate.js";
 import { Box } from "./Box.js";
 import { Bullet } from "./Bullet.js";
 import { Player } from "./Player.js";
-import { AudioManager } from "../handle/AudioManager.js";
+import { AudioManager } from "../manager/audio_manager.js";
+import { GameManager } from "../manager/game_manager.js";
 export class Enemy {
   constructor(x, y) {
     this.x = x;
@@ -54,6 +55,7 @@ export class Enemy {
   }
 
   update() {
+    if (GameManager.instance.state !== "playing") return;
     if (this.health <= 0 && this.isAlive) {
       AudioManager.instance.playSound("slime_death");
       this.isAlive = false;

@@ -1,4 +1,4 @@
-import { CollisionManager } from "../handle/CollisionManager.js";
+import { CollisionManager } from "../manager/collision_manager.js";
 import { RectCollider } from "../handle/RectCollider.js";
 import { EnemyManager } from "../manager/enemy_manager.js";
 import { Bullet } from "./Bullet.js";
@@ -8,7 +8,7 @@ import { Player } from "./Player.js";
 export class Boss extends Enemy {
   constructor(x, y) {
     super(x, y);
-    this.health = 400;
+    this.health = 500;
     this.isAlive = true;
     this.isColliding = false;
     this.img = new Image();
@@ -22,7 +22,8 @@ export class Boss extends Enemy {
     );
     this.imgIndex = 1;
     this.quantityBullet = 10;
-    this.hasSpawnedEnemies = false;
+    this.hasSpawnedEnemies1 = false;
+    this.hasSpawnedEnemies2 = false;
     CollisionManager.instance.addCollider(this.collider);
     this.loadImage();
     this.shootInterval = setInterval(() => {
@@ -66,12 +67,16 @@ export class Boss extends Enemy {
   }
 
   update() {
-    if (this.health < 250 && this.health >= 150) {
+    if (this.health < 400 && this.health >= 300) {
       this.quantityBullet = 15;
-    } else if (this.health < 150 && !this.hasSpawnedEnemies) {
+    } else if (this.health < 300 && !this.hasSpawnedEnemies1 && this.health > 150) {
       this.quantityBullet = 20;
       this.spawnEnemy(6);
-      this.hasSpawnedEnemies = true;
+      this.hasSpawnedEnemies1 = true;
+    } else if (this.health < 150  && !this.hasSpawnedEnemies2){
+      this.quantityBullet = 25;
+      this.spawnEnemy(6);
+      this.hasSpawnedEnemies2 = true;
     }
 
     if (this.health <= 0) {
@@ -110,8 +115,8 @@ export class Boss extends Enemy {
   }
   getRandomOffset() {
     return Math.random() < 0.5
-      ? -150 + Math.random() * 50 // Giá trị từ -150 đến -100 (luôn < -75)
-      : 100 + Math.random() * 50; // Giá trị từ 100 đến 150 (luôn > 75)
+      ? -150 + Math.random() * 50 
+      : 100 + Math.random() * 50; 
   }
 
   onCollision(otherCollider) {
