@@ -1,6 +1,7 @@
 import { Level } from "../level/Level.js";
 import { LevelManager } from "../level/LevelManager.js";
 import { BoxManager } from "./box_manager.js";
+import { CollisionManager } from "./collision_manager.js";
 import { EnemyManager } from "./enemy_manager.js";
 
 export class GameManager {
@@ -17,10 +18,11 @@ export class GameManager {
     resetGame() {
       this.state = "playing";
       LevelManager.instance.currentLevelId =1;
+      CollisionManager.instance.clear();
       EnemyManager.instance.enemies = [];
       BoxManager.instance.boxs =[];
-      LevelManager.instance.startLevel();
       Level.playerInstance =null;
+      LevelManager.instance.startLevel();
     }
   }
   

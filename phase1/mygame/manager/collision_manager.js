@@ -32,4 +32,8 @@ export class CollisionManager {
       }
     }
   }
+
+  clear() {
+    this.colliders = [];
+  }
 }

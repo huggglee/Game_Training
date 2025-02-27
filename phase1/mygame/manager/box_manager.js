@@ -33,11 +33,6 @@ export class BoxManager {
   draw(context) {
     context.drawImage(this.background, 0, 0);
     this.boxs.forEach((box) => box.draw(context));
-
-    // this.bullets.forEach((bullet) => {
-    //   bullet.draw(context);
-    //   bullet.update();
-    // });
   }
 
   update() {
@@ -45,9 +40,4 @@ export class BoxManager {
       box.update();
     });
   }
-  // shoot(x, y) {
-  //   for (let i = 0; i < 10; i++) {
-  //     this.bullets.push(new Bullet(x, y, (i * Math.PI) / 5));
-  //   }
-  // }
 }

@@ -67,7 +67,6 @@ export class Level {
   }
 
   onWon() {
-    // console.log("win");
     LevelManager.instance.loadNextLevel();
   }
 

@@ -14,7 +14,9 @@ export class LevelManager {
     LevelManager.instance = this;
   }
   async loadLevel() {
-    console.log(this.currentLevelId);
+    if (Level.playerInstance) {
+      Level.playerInstance.clearBullets();
+    }
     // Cleanup current level if exists
     if (this.currentLevel) {
       this.unloadCurrentLevel();

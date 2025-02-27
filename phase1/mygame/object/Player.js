@@ -55,16 +55,16 @@ export class Player {
 
   move(inputController) {
     if (inputController.isKeyPressed("a")) {
-      this.x -= this.speed*window.dt/1000;
+      this.x -= (this.speed * window.dt) / 1000;
     }
     if (inputController.isKeyPressed("d")) {
-      this.x += this.speed*window.dt/1000;
+      this.x += (this.speed * window.dt) / 1000;
     }
     if (inputController.isKeyPressed("w")) {
-      this.y -= this.speed*window.dt/1000;
+      this.y -= (this.speed * window.dt) / 1000;
     }
     if (inputController.isKeyPressed("s")) {
-      this.y += this.speed*window.dt/1000;
+      this.y += (this.speed * window.dt) / 1000;
     }
     this.collider.updatePosition(this.x, this.y);
 
@@ -84,7 +84,7 @@ export class Player {
     if (GameManager.instance.state !== "playing") return;
     this.move(inputController);
 
-    if (inputController.getMouseClick() ) {
+    if (inputController.getMouseClick()) {
       this.shoot();
     }
     this.bullets.forEach((bullet) => {
@@ -139,6 +139,14 @@ export class Player {
     this.bullets.push(bullet);
     AudioManager.instance.playSound("shoot2");
   }
+
+  clearBullets() {
+    this.bullets.forEach((bullet) => {
+      CollisionManager.instance.removeCollider(bullet.collider);
+    });
+    this.bullets = [];
+  }
+
   drawHUD(context) {
     context.fillStyle = "black";
     context.fillRect(20, 20, 200, 20);
