@@ -119,6 +119,7 @@ export class Boss extends Enemy {
       : 100 + Math.random() * 50; 
   }
 
+  
   onCollision(otherCollider) {
     if (
       otherCollider.owner instanceof Bullet &&
