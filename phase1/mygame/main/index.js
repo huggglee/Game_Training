@@ -31,9 +31,9 @@ async function init() {
   initSound();
   initEvent();
   levelMng.startLevel();
-  setTimeout(()=>{
-    gameManager.setState("gameover")
-  },3000);
+  // setTimeout(()=>{
+  //   gameManager.setState("gameover")
+  // },3000);
   window.requestAnimationFrame(loop);
 }
 
