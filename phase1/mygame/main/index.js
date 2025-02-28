@@ -102,13 +102,12 @@ function initEvent() {
   });
 
   retryButton.addEventListener("click", () => {
-    console.log("retry");
-    gameManager.resetGame();
-    gameOverScreen.classList.toggle("show");
-    window.requestAnimationFrame(loop);
+    // gameManager.resetGame();
+    // gameOverScreen.classList.toggle("show");
+    // window.requestAnimationFrame(loop);
+    location.reload();
   });
   playAgain.addEventListener("click", () => {
-    console.log("again");
     gameManager.resetGame();
     winScreen.classList.toggle("show");
     window.requestAnimationFrame(loop);

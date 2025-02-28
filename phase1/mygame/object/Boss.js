@@ -63,7 +63,7 @@ export class Boss extends Enemy {
   }
   drawHUD(context) {
     context.fillStyle = "red";
-    context.fillRect(this.x, this.y - 10, (this.health / 400) * 150, 5);
+    context.fillRect(this.x, this.y - 10, (this.health / 500) * 150, 5);
   }
 
   update() {
