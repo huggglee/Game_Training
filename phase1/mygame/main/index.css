@@ -91,37 +91,41 @@ canvas {
 
   .gameOver {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.8);
-    padding: 30px;
-    border-radius: 10px;
-    text-align: center;
-    width: 300px;
-    box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.2);
-    display: none;
-  }
-
-  .gameOver h2 {
-    color: white;
-    margin-bottom: 20px;
-  }
-
-  #retryButton {
+    top: 0;
+    left: 0;
     width: 100%;
-    padding: 10px;
-    font-size: 18px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none; 
+    text-align: center;
+    z-index: 10;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .gameOver h2 {
+    font-size: 50px;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    color: #ffcc00;
+    margin-top: 25%; 
+    animation: bounce 1.5s infinite;
+  }
+  
+  #retryButton {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 20px;
+    color: white;
+    background: #ffcc00;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s;
-    background-color: #f44336;
-    color: white;
   }
-
+  
   #retryButton:hover {
-    opacity: 0.8;
+    background: #ff9900;
   }
 .win-screen {
   position: absolute;

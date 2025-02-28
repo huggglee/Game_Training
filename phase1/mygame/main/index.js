@@ -20,7 +20,7 @@ let pauseMenu = document.getElementById("pauseMenu");
 let resume_btn = document.getElementById("resumeButton");
 let restartButton = document.getElementById("restartButton");
 let gameOverScreen = document.getElementById("gameOver");
-let retryButton = document.getElementById("retryButton");
+// let retryButton = document.getElementById("retryButton");
 let winScreen = document.getElementById("winScreen");
 let playAgain = document.getElementById("playAgainButton");
 
@@ -31,9 +31,9 @@ async function init() {
   initSound();
   initEvent();
   levelMng.startLevel();
-  // setTimeout(()=>{
-  //   gameManager.setState("gameover")
-  // },3000);
+  setTimeout(()=>{
+    gameManager.setState("gameover")
+  },3000);
   window.requestAnimationFrame(loop);
 }
 
@@ -101,12 +101,12 @@ function initEvent() {
     pauseMenu.classList.toggle("show");
   });
 
-  retryButton.addEventListener("click", () => {
-    // gameManager.resetGame();
-    // gameOverScreen.classList.toggle("show");
-    // window.requestAnimationFrame(loop);
-    location.reload();
-  });
+  // retryButton.addEventListener("click", () => {
+  //   // gameManager.resetGame();
+  //   // gameOverScreen.classList.toggle("show");
+  //   // window.requestAnimationFrame(loop);
+  //   location.reload();
+  // });
   playAgain.addEventListener("click", () => {
     gameManager.resetGame();
     winScreen.classList.toggle("show");
